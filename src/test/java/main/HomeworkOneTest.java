@@ -12,7 +12,7 @@ import pages.CoursesPage;
 import pages.MainPage;
 
 @ExtendWith(UIExtension.class)
-public class MainPageTest {
+public class HomeworkOneTest {
 
   @Inject
   private WebDriver driver;
@@ -24,7 +24,7 @@ public class MainPageTest {
   private CoursesPage coursesPage;
 
   @Test
-  public void clickDayNewsItem() {
+  public void scenario_one() {
     String courseName = "Scratch";
     coursesPage.open();
     CoursePage coursePage = coursesPage.clickOnCourseByName(courseName);
