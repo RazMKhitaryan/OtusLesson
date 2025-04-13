@@ -21,6 +21,7 @@
     <junit.version>5.12.1</junit.version>
     <guava.version>32.1.2-jre</guava.version>
     <assertj.version>3.27.3</assertj.version>
+    <jsoup.version>1.18.3</jsoup.version>
 
   </properties>
 
@@ -53,6 +54,12 @@
       <artifactId>assertj-core</artifactId>
       <version>${assertj.version}</version>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
+      <version>${jsoup.version}</version>
     </dependency>
 
   </dependencies>

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.openqa.selenium.WebDriver;
+import pages.CoursesPage;
 
 public class UIExtension implements BeforeEachCallback, AfterEachCallback {
 
@@ -16,6 +17,7 @@ public class UIExtension implements BeforeEachCallback, AfterEachCallback {
   @Override
   public void afterEach(ExtensionContext context) {
     WebDriver driver = injector.getInstance(WebDriver.class);
+    new CoursesPage(driver).open(); // возврат страницы в исходное состояние
     if (driver != null) {
       driver.quit();
     }
