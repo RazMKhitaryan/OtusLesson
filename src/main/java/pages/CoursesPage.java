@@ -1,12 +1,7 @@
 package pages;
 
 import com.google.inject.Inject;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import listeners.MouseListener;
 import models.CourseModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,35 +9,29 @@ import org.jsoup.nodes.Element;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class CoursesPage extends AbsBasePage {
 
   @FindBy(css = ".sc-18q05a6-1.bwGwUO a")
   List<WebElement> courseLinks;
-  private CoursePage coursePage;
-  private CourseModel courseModel;
 
-  @Inject
-  public CoursesPage(WebDriver driver, CoursePage coursePage) {
-    super(driver);
-    this.coursePage = coursePage;
-  }
+  @FindBy(css = ".sc-1w8jhjp-4.isrHWT .sc-1fry39v-0.eAOVcR.sc-nncjh3-1.eQrMuA")
+  private List<WebElement> coursesList;
 
-  @Inject
-  public CoursesPage(WebDriver driver, CoursePage coursePage, CourseModel courseModel) {
-    super(driver);
-    this.coursePage = coursePage;
-    this.courseModel = courseModel;
-  }
-
-  @Inject
-  public CoursesPage(WebDriver driver) {
-    super(driver);
+  public CoursesPage(WebDriver driver, MouseListener mouseListener) {
+    super(driver, mouseListener);
   }
 
   @Override
-  public AbsBasePage open() {
-    return openPage(getUrl());
+  public CoursesPage open() {
+    openPage(getUrl());
+    return this;
   }
 
   @Override
@@ -50,27 +39,26 @@ public class CoursesPage extends AbsBasePage {
     return "/catalog/courses";
   }
 
-  public CoursePage clickOnCourseByName(String courseName) {
+  public void clickOnCourseByName(String courseName) {
     WebElement webElement = courseLinks.stream()
-        .filter(course -> course.getText()
-            .trim()
+        .filter(course -> course.getText().trim()
             .contains(courseName)) // реализациа фильтра
         .findFirst()
-            .orElseThrow(() -> new RuntimeException("Course not found: " + courseName));
+        .orElseThrow(() -> new RuntimeException("Course not found: " + courseName));
     clickOnElement(webElement);
-    return coursePage;
   }
 
   public List<CourseModel> parseCourseLinksToModels(CourseModel courseModel) {
     return courseLinks.stream()
         .map(el -> {
           String[] split = el.getText().split("\n");
-          courseModel.setGroup(split[0].trim());
-          courseModel.setStatus(split[1].trim());
-          courseModel.setName(split[2].trim());
           try {
+            courseModel.setGroup(split[0].trim());
+            courseModel.setStatus(split[1].trim());
+            courseModel.setName(split[2].trim());
             courseModel.setDate(split[3].split(" · ")[0].trim());
-          } catch (Exception e) {
+          } catch (Exception ignored) {
+            System.out.println("Error parsing date: " + ignored.getMessage());
           }
           return courseModel;
         })
@@ -104,5 +92,21 @@ public class CoursesPage extends AbsBasePage {
         status, name, date);
     Element element = doc.select(query).first();
     return element != null;
+  }
+
+  public WebElement getOpenedCourseByName(String courseName) {
+    return coursesList.stream()
+        .filter(course -> course.getText()
+            .contains(courseName))
+        .findFirst()
+        .get();
+  }
+
+  public boolean isCourseSelected(WebElement webElement) {
+    if (getElementAttribute(webElement, "value").equals("true")) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

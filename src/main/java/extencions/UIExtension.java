@@ -8,16 +8,16 @@ import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.openqa.selenium.WebDriver;
-import pages.CoursesPage;
+import pages.MainPage;
 
 public class UIExtension implements BeforeEachCallback, AfterEachCallback {
 
-  private Injector injector = null;
+  private Injector injector;
 
   @Override
   public void afterEach(ExtensionContext context) {
     WebDriver driver = injector.getInstance(WebDriver.class);
-    new CoursesPage(driver).open(); // возврат страницы в исходное состояние
+    injector.getInstance(MainPage.class).open(); // возврат страницы в исходное состояние
     if (driver != null) {
       driver.quit();
     }
@@ -29,5 +29,6 @@ public class UIExtension implements BeforeEachCallback, AfterEachCallback {
     driver.manage().window().maximize();
     injector = Guice.createInjector(new GuicePagesModule(driver));
     injector.injectMembers(context.getTestInstance().get());
+    injector.getInstance(MainPage.class).open().addCookie();
   }
 }

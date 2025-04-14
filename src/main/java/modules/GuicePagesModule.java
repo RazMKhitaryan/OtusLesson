@@ -3,12 +3,15 @@ package modules;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import components.TrainingComponent;
 import listeners.MouseListener;
 import models.CourseModel;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.Actions;
 import pages.CoursePage;
 import pages.CoursesPage;
 import pages.MainPage;
+import utils.ActionUtils;
 
 public class GuicePagesModule extends AbstractModule {
 
@@ -25,20 +28,20 @@ public class GuicePagesModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public MainPage getMainPage() {
-    return new MainPage(driver);
+  public MainPage getMainPage(ActionUtils actionUtils, MouseListener mouseListener) {
+    return new MainPage(driver, actionUtils, mouseListener);
   }
 
   @Provides
   @Singleton
-  public CoursesPage getCoursesPage(CoursePage coursePage, CourseModel courseModel) {
-    return new CoursesPage(driver, coursePage);
+  public CoursesPage getCoursesPage(MouseListener mouseListener) {
+    return new CoursesPage(driver, mouseListener);
   }
 
   @Provides
   @Singleton
-  public CoursePage getCoursePage() {
-    return new CoursePage(driver);
+  public CoursePage getCoursePage(MouseListener mouseListener) {
+    return new CoursePage(driver, mouseListener);
   }
 
   @Provides
@@ -52,4 +55,23 @@ public class GuicePagesModule extends AbstractModule {
   public CourseModel getCourseModel() {
     return new CourseModel();
   }
+
+  @Provides
+  @Singleton
+  public ActionUtils getActionUtils(Actions actions) {
+    return new ActionUtils(actions);
+  }
+
+  @Provides
+  @Singleton
+  public Actions getActions() {
+    return new Actions(driver);
+  }
+
+  @Provides
+  @Singleton
+  public TrainingComponent getTrainingComponent(MouseListener mouseListener) {
+    return new TrainingComponent(driver, mouseListener);
+  }
+
 }
