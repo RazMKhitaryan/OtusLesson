@@ -30,5 +30,6 @@ public class UIExtension implements BeforeEachCallback, AfterEachCallback {
     injector = Guice.createInjector(new GuicePagesModule(driver));
     injector.injectMembers(context.getTestInstance().get());
     injector.getInstance(MainPage.class).open().addCookie();
+    driver.navigate().refresh();
   }
 }

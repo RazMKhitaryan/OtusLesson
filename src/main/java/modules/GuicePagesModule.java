@@ -28,26 +28,26 @@ public class GuicePagesModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public MainPage getMainPage(ActionUtils actionUtils, MouseListener mouseListener) {
-    return new MainPage(driver, actionUtils, mouseListener);
+  public MainPage getMainPage(ActionUtils actionUtils) {
+    return new MainPage(driver, actionUtils);
   }
 
   @Provides
   @Singleton
-  public CoursesPage getCoursesPage(MouseListener mouseListener) {
-    return new CoursesPage(driver, mouseListener);
+  public CoursesPage getCoursesPage() {
+    return new CoursesPage(driver);
   }
 
   @Provides
   @Singleton
-  public CoursePage getCoursePage(MouseListener mouseListener) {
-    return new CoursePage(driver, mouseListener);
+  public CoursePage getCoursePage() {
+    return new CoursePage(driver);
   }
 
   @Provides
   @Singleton
   public MouseListener getMouseListener() {
-    return new MouseListener(driver);
+    return new MouseListener();
   }
 
   @Provides
@@ -70,8 +70,8 @@ public class GuicePagesModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public TrainingComponent getTrainingComponent(MouseListener mouseListener) {
-    return new TrainingComponent(driver, mouseListener);
+  public TrainingComponent getTrainingComponent() {
+    return new TrainingComponent(driver);
   }
 
 }

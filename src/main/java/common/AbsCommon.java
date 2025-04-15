@@ -1,6 +1,5 @@
 package common;
 
-import listeners.MouseListener;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,16 +8,13 @@ import org.openqa.selenium.support.PageFactory;
 public abstract class AbsCommon<T extends AbsCommon> {
 
   protected WebDriver driver;
-  protected MouseListener mouseListener;
 
-  public AbsCommon(WebDriver driver, MouseListener mouseListener) {
+  public AbsCommon(WebDriver driver) {
     this.driver = driver;
-    this.mouseListener = mouseListener;
     PageFactory.initElements(driver, this); //реализациа фабрики
   }
 
   protected T clickOnElement(WebElement element) {
-    mouseListener.beforeClick(element); // подсветка элементов
     element.click();
     return (T) this;
   }

@@ -1,15 +1,14 @@
 package pages;
 
 import common.AbsCommon;
-import listeners.MouseListener;
 import org.openqa.selenium.WebDriver;
 
 public abstract class AbsBasePage<T extends AbsBasePage> extends AbsCommon {
 
   private final static String BASE_URL = "https://otus.ru";
 
-  public AbsBasePage(WebDriver driver, MouseListener mouseListener) {
-    super(driver, mouseListener);
+  public AbsBasePage(WebDriver driver) {
+    super(driver);
   }
 
   public abstract T open();

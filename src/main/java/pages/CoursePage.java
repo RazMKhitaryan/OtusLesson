@@ -1,7 +1,6 @@
 package pages;
 
 import com.google.inject.Inject;
-import listeners.MouseListener;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -12,8 +11,8 @@ public class CoursePage extends AbsBasePage {
   WebElement courseTitle;
 
   @Inject
-  public CoursePage(WebDriver driver, MouseListener mouseListener) {
-    super(driver, mouseListener);
+  public CoursePage(WebDriver driver) {
+    super(driver);
   }
 
   @Override

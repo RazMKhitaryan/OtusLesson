@@ -1,6 +1,6 @@
 package components;
+
 import com.google.inject.Inject;
-import listeners.MouseListener;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -12,8 +12,8 @@ public class TrainingComponent extends AbsComponent {
   public List<WebElement> courcesList;
 
   @Inject
-  public TrainingComponent(WebDriver driver, MouseListener mouseListener) {
-    super(driver, mouseListener);
+  public TrainingComponent(WebDriver driver) {
+    super(driver);
   }
 
   public String clickOnRandomCourseAndReturnName() {

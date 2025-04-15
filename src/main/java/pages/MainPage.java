@@ -2,7 +2,6 @@ package pages;
 
 import com.google.inject.Inject;
 import components.TrainingComponent;
-import listeners.MouseListener;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -20,8 +19,8 @@ public class MainPage extends AbsBasePage {
   private WebElement okButton;
 
   @Inject
-  public MainPage(WebDriver driver, ActionUtils actionUtils, MouseListener mouseListener) {
-    super(driver, mouseListener);
+  public MainPage(WebDriver driver, ActionUtils actionUtils) {
+    super(driver);
     this.actionUtils = actionUtils;
   }
 

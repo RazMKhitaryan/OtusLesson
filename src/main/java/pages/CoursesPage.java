@@ -1,7 +1,11 @@
 package pages;
 
-import com.google.inject.Inject;
-import listeners.MouseListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import models.CourseModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -9,12 +13,6 @@ import org.jsoup.nodes.Element;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class CoursesPage extends AbsBasePage {
 
@@ -24,8 +22,8 @@ public class CoursesPage extends AbsBasePage {
   @FindBy(css = ".sc-1w8jhjp-4.isrHWT .sc-1fry39v-0.eAOVcR.sc-nncjh3-1.eQrMuA")
   private List<WebElement> coursesList;
 
-  public CoursesPage(WebDriver driver, MouseListener mouseListener) {
-    super(driver, mouseListener);
+  public CoursesPage(WebDriver driver) {
+    super(driver);
   }
 
   @Override
