@@ -3,8 +3,9 @@ package components;
 import common.AbsCommon;
 import org.openqa.selenium.WebDriver;
 
-public class AbsComponent extends AbsCommon {
-  public AbsComponent(WebDriver driver) {
+public class AbsBaseComponent extends AbsCommon {
+
+  public AbsBaseComponent(WebDriver driver) {
     super(driver);
   }
 }

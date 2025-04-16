@@ -3,6 +3,7 @@ package modules;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import components.HeaderComponent;
 import components.TrainingComponent;
 import listeners.MouseListener;
 import models.CourseModel;
@@ -28,8 +29,8 @@ public class GuicePagesModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public MainPage getMainPage(ActionUtils actionUtils) {
-    return new MainPage(driver, actionUtils);
+  public MainPage getMainPage() {
+    return new MainPage(driver);
   }
 
   @Provides
@@ -72,6 +73,12 @@ public class GuicePagesModule extends AbstractModule {
   @Singleton
   public TrainingComponent getTrainingComponent() {
     return new TrainingComponent(driver);
+  }
+
+  @Provides
+  @Singleton
+  public HeaderComponent getHeaderComponent(ActionUtils actionUtils) {
+    return new HeaderComponent(driver, actionUtils);
   }
 
 }

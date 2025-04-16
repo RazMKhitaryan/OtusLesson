@@ -3,25 +3,19 @@ package main;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.inject.Inject;
+import components.HeaderComponent;
 import components.TrainingComponent;
 import extencions.UIExtension;
 import models.CourseModel;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.openqa.selenium.WebDriver;
 import pages.CoursePage;
 import pages.CoursesPage;
-import pages.MainPage;
 import java.util.List;
+
 
 @ExtendWith(UIExtension.class)
 public class HomeworkOneTest {
-
-  @Inject
-  private WebDriver driver;
-
-  @Inject
-  private MainPage mainPage;
 
   @Inject
   private CoursesPage coursesPage;
@@ -34,6 +28,9 @@ public class HomeworkOneTest {
 
   @Inject
   private TrainingComponent trainingComponent;
+
+  @Inject
+  private HeaderComponent headerComponent;
 
   @Test
   public void scenario_one() {
@@ -57,7 +54,7 @@ public class HomeworkOneTest {
 
   @Test
   public void scenario_three() {
-    mainPage.hoverOnTrainingField();
+    headerComponent.hoverOnTrainingField();
     String courseName = trainingComponent
         .clickOnRandomCourseAndReturnName();
     assertThat(coursesPage.isCourseSelected(coursesPage.getOpenedCourseByName(courseName)))

@@ -6,7 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import java.util.List;
 
-public class TrainingComponent extends AbsComponent {
+public class TrainingComponent extends AbsBaseComponent {
 
   @FindBy(css = ".sc-1kjc6dh-2.sc-ig0m9y-0.lhsLfs.fRJDe a")
   public List<WebElement> courcesList;
