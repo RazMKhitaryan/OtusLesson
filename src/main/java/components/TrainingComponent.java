@@ -8,7 +8,7 @@ import java.util.List;
 
 public class TrainingComponent extends AbsBaseComponent {
 
-  @FindBy(css = ".sc-1kjc6dh-2.sc-ig0m9y-0.lhsLfs.fRJDe a")
+  @FindBy(css = "[class='sc-1kjc6dh-2 sc-ig0m9y-0 lhsLfs cgYLnJ'] a")
   public List<WebElement> courcesList;
 
   @Inject
