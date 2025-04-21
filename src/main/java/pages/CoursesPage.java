@@ -19,6 +19,9 @@ public class CoursesPage extends AbsBasePage {
   @FindBy(css = ".sc-18q05a6-1.bwGwUO a")
   List<WebElement> courseLinks;
 
+  @FindBy(css = ".sc-18q05a6-1.bwGwUO a h6")
+  List<WebElement> coursesNames;
+
   @FindBy(css = ".sc-1w8jhjp-4.isrHWT .sc-1fry39v-0.eAOVcR.sc-nncjh3-1.eQrMuA")
   private List<WebElement> coursesList;
 
@@ -37,6 +40,12 @@ public class CoursesPage extends AbsBasePage {
     return "/catalog/courses";
   }
 
+  public String getRandomCourseName() {
+    List<String> names = coursesNames.stream().map(WebElement::getText).toList();
+    int index = (int) (Math.random() * coursesNames.size());
+    return names.get(index);
+  }
+
   public void clickOnCourseByName(String courseName) {
     WebElement webElement = courseLinks.stream()
         .filter(course -> course.getText().trim()
@@ -50,15 +59,20 @@ public class CoursesPage extends AbsBasePage {
     return courseLinks.stream()
         .map(el -> {
           String[] split = el.getText().split("\n");
-          try {
-            courseModel.setGroup(split[0].trim());
-            courseModel.setStatus(split[1].trim());
-            courseModel.setName(split[2].trim());
-            courseModel.setDate(split[3].split(" · ")[0].trim());
-          } catch (Exception ignored) {
-            System.out.println("Error parsing date: " + ignored.getMessage());
+          CourseModel course = new CourseModel();
+          if (split.length == 3) {
+            course.setGroup(split[0].trim());
+            course.setStatus(" ");
+            course.setName(split[1].trim());
+            course.setDate(split[2].split(" · ")[0].trim());
+          } else {
+            course.setGroup(split[0].trim());
+            course.setStatus(split[1].trim());
+            course.setName(split[2].trim());
+            course.setDate(split[3].split(" · ")[0].trim());
+
           }
-          return courseModel;
+          return course;
         })
         .filter(course -> course.getDate() != null)
         .collect(Collectors.toList());
@@ -79,6 +93,20 @@ public class CoursesPage extends AbsBasePage {
         .collect(Collectors.toList());
   }
 
+  public List<CourseModel> getLatestCourses(List<CourseModel> courses) {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM, yyyy", new Locale("ru"));
+    Optional<LocalDate> latestDates = courses.stream()
+        .map(course -> LocalDate.parse(course.getDate(), formatter))
+        .reduce(
+            (d1, d2) -> d1.isAfter(d2) ? d1 : d2); // необходимо использовать stream api и reduce.
+    if (latestDates.isEmpty()) {
+      return List.of();
+    }
+    LocalDate latestDate = latestDates.get();
+    return courses.stream()
+        .filter(course -> LocalDate.parse(course.getDate(), formatter).equals(latestDate))
+        .collect(Collectors.toList());
+  }
 
   public boolean isCourseModelInPage(CourseModel courseModel) {
     Document doc = Jsoup.parse(driver.getPageSource()); // необходимо использовать jsoup

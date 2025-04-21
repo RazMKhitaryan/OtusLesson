@@ -7,18 +7,20 @@ import components.HeaderComponent;
 import components.TrainingComponent;
 import extencions.UIExtension;
 import models.CourseModel;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import pages.CoursePage;
 import pages.CoursesPage;
 import java.util.List;
 
-
 @ExtendWith(UIExtension.class)
 public class HomeworkOneTest {
 
   @Inject
   private CoursesPage coursesPage;
+
+  SoftAssertions softly = new SoftAssertions();
 
   @Inject
   private CoursePage coursePage;
@@ -34,22 +36,28 @@ public class HomeworkOneTest {
 
   @Test
   public void scenario_one() {
-    String courseName = "Archimate";
-    coursesPage.open()
-        .clickOnCourseByName(courseName);
-    assertThat(coursePage.isSelectedCoursePageOpened(courseName))
-        .as("Check that course page for '%s' is opened" + courseName)
+    String randomCourseName = coursesPage.open().getRandomCourseName();
+    coursesPage.clickOnCourseByName(randomCourseName);
+    assertThat(coursePage.isSelectedCoursePageOpened(randomCourseName))
+        .as("Check that course page for '%s' is opened" + randomCourseName)
         .isTrue();
   }
 
   @Test
   public void scenario_two() {
-    List<CourseModel> earliestCourses = coursesPage.open()
-        .getEarliestCourses(coursesPage.parseCourseLinksToModels(courseModel));
+    List<CourseModel> courses = coursesPage.open().parseCourseLinksToModels(courseModel);
+    List<CourseModel> earliestCourses = coursesPage.getEarliestCourses(courses);
+    List<CourseModel> latestCourses = coursesPage.getLatestCourses(courses);
+
     earliestCourses.forEach(course ->
-        assertThat(coursesPage.isCourseModelInPage(course))
-            .as("Course should be present in the page" + course.getName())
+        softly.assertThat(coursesPage.isCourseModelInPage(course))
+            .as("Earliest course should be present in the page: " + course.getName())
             .isTrue());
+    latestCourses.forEach(course ->
+        softly.assertThat(coursesPage.isCourseModelInPage(course))
+            .as("Latest course should be present in the page: " + course.getName())
+            .isTrue());
+    softly.assertAll();
   }
 
   @Test
