@@ -1,6 +1,5 @@
 package components;
 
-import com.google.inject.Inject;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -11,7 +10,6 @@ public class TrainingComponent extends AbsBaseComponent {
   @FindBy(css = "[class='sc-1kjc6dh-2 sc-ig0m9y-0 lhsLfs cgYLnJ'] a")
   public List<WebElement> courcesList;
 
-  @Inject
   public TrainingComponent(WebDriver driver) {
     super(driver);
   }

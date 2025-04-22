@@ -1,6 +1,5 @@
 package components;
 
-import com.google.inject.Inject;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -13,7 +12,6 @@ public class HeaderComponent extends AbsBaseComponent {
   @FindBy(css = "span[title='Обучение']")
   private WebElement trainingField;
 
-  @Inject
   public HeaderComponent(WebDriver driver, ActionUtils actionUtils) {
     super(driver);
     this.actionUtils = actionUtils;
