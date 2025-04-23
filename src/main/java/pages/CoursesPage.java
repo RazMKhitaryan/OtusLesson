@@ -1,5 +1,6 @@
 package pages;
 
+import annotations.Path;
 import models.CourseModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+@Path("/catalog/courses")
 public class CoursesPage extends AbsBasePage {
 
   @FindBy(css = ".sc-18q05a6-1.bwGwUO a")
@@ -31,13 +32,8 @@ public class CoursesPage extends AbsBasePage {
 
   @Override
   public CoursesPage open() {
-    openPage(getUrl());
+    openPage();
     return this;
-  }
-
-  @Override
-  public String getUrl() {
-    return "/catalog/courses";
   }
 
   public String getRandomCourseName() {

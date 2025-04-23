@@ -3,16 +3,12 @@ package modules;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
-import components.HeaderComponent;
-import components.TrainingComponent;
 import listeners.MouseListener;
 import models.CourseModel;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.interactions.Actions;
 import pages.CoursePage;
 import pages.CoursesPage;
 import pages.MainPage;
-import utils.ActionUtils;
 
 public class GuicePagesModule extends AbstractModule {
 
@@ -55,30 +51,6 @@ public class GuicePagesModule extends AbstractModule {
   @Singleton
   public CourseModel getCourseModel() {
     return new CourseModel();
-  }
-
-  @Provides
-  @Singleton
-  public ActionUtils getActionUtils(Actions actions) {
-    return new ActionUtils(actions);
-  }
-
-  @Provides
-  @Singleton
-  public Actions getActions() {
-    return new Actions(driver);
-  }
-
-  @Provides
-  @Singleton
-  public TrainingComponent getTrainingComponent() {
-    return new TrainingComponent(driver);
-  }
-
-  @Provides
-  @Singleton
-  public HeaderComponent getHeaderComponent(ActionUtils actionUtils) {
-    return new HeaderComponent(driver, actionUtils);
   }
 
 }

@@ -1,7 +1,9 @@
 package pages;
 
+import annotations.Path;
 import org.openqa.selenium.WebDriver;
 
+@Path("/")
 public class MainPage extends AbsBasePage {
 
   public MainPage(WebDriver driver) {
@@ -10,13 +12,7 @@ public class MainPage extends AbsBasePage {
 
   @Override
   public MainPage open() {
-    openPage(getUrl());
+    openPage();
     return this;
   }
-
-  @Override
-  public String getUrl() {
-    return "";
-  }
-
 }
