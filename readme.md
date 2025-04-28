@@ -26,4 +26,4 @@ cd OtusLesson
 
 ## Run the tests with command from terminal
 
-`mvn clean test`
+`mvn clean test -Dbrowser=chrome -DbaseUrl=https://otus.ru`

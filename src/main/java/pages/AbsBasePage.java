@@ -7,19 +7,20 @@ import org.openqa.selenium.WebElement;
 import utils.AnnotationUtils;
 import java.util.List;
 
-public abstract class AbsBasePage<T extends AbsBasePage> extends AbsCommon {
-  private final static String BASE_URL = "https://otus.ru";
+public abstract class AbsBasePage extends AbsCommon {
+  private final static String BASE_URL = System.getProperty("baseUrl", "https://otus.ru");
 
   public AbsBasePage(WebDriver driver) {
     super(driver);
     waitUtils.waitTillPageLoaded();
   }
 
-  public abstract T open();
 
-  protected T openPage() {
+  public void openPage() {
     driver.get(BASE_URL + getPath());
-    return (T) this;
+    this.addCookie();
+    driver.navigate().refresh();
+    waitUtils.waitTillPageLoaded();
   }
 
   private String getPath() {

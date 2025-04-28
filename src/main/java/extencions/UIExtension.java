@@ -18,7 +18,7 @@ public class UIExtension implements BeforeEachCallback, AfterEachCallback {
   @Override
   public void afterEach(ExtensionContext context) {
     WebDriver driver = injector.getInstance(WebDriver.class);
-    injector.getInstance(MainPage.class).open(); // возврат страницы в исходное состояние
+    injector.getInstance(MainPage.class).openPage(); // возврат страницы в исходное состояние
     if (driver != null) {
       driver.quit();
     }
@@ -27,9 +27,7 @@ public class UIExtension implements BeforeEachCallback, AfterEachCallback {
   @Override
   public void beforeEach(ExtensionContext context) {
     WebDriver driver = new WebDriverFactory().create();
-    driver.manage().window().maximize();
     injector = Guice.createInjector(new GuicePagesModule(driver), new GuiceComponentsModule(driver));
     injector.injectMembers(context.getTestInstance().get());
-    injector.getInstance(MainPage.class).open().addCookie();
   }
 }

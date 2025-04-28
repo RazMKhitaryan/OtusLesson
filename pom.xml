@@ -83,6 +83,7 @@
         <configuration>
           <systemPropertyVariables>
             <browser>chrome</browser>
+            <baseUrl>https://otus.ru</baseUrl>
           </systemPropertyVariables>
         </configuration>
       </plugin>

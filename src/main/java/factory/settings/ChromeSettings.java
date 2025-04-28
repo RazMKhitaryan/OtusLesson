@@ -5,6 +5,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class ChromeSettings implements IBrowserSettings {
 
   public ChromeOptions settings() {
-    return new ChromeOptions();
+    ChromeOptions chromeOptions = new ChromeOptions();
+    chromeOptions.addArguments("start-maximized");
+    return chromeOptions;
   }
 }

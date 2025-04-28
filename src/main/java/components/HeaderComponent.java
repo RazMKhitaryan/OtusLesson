@@ -5,7 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-@Component("css:[class='sc-r03h0s-0 bLpisq']")
+@Component("xpath://*[@id=\"__next\"]/div[2]/div[2]")
 public class HeaderComponent extends AbsBaseComponent {
 
   @FindBy(css = "span[title='Обучение']")

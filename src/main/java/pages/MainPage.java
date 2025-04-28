@@ -10,9 +10,4 @@ public class MainPage extends AbsBasePage {
     super(driver);
   }
 
-  @Override
-  public MainPage open() {
-    openPage();
-    return this;
-  }
 }
