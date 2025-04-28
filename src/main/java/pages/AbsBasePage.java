@@ -13,12 +13,16 @@ public abstract class AbsBasePage extends AbsCommon {
   public AbsBasePage(WebDriver driver) {
     super(driver);
     waitUtils.waitTillPageLoaded();
+    waitUtils.waitTillPageReady();
   }
 
 
   public void openPage() {
     driver.get(BASE_URL + getPath());
     this.addCookie();
+    driver.navigate().refresh();
+    waitUtils.waitTillPageLoaded();
+    waitUtils.waitTillPageReady();
   }
 
   private String getPath() {

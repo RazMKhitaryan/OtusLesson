@@ -36,8 +36,14 @@ public class WaitUtils {
     wait.until(ExpectedConditions.presenceOfElementLocated(locator));
   }
 
-  public void waitTillPageLoaded() {
+  public void waitTillPageReady() {
     wait.until((ExpectedCondition<Boolean>) wd ->
         ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete"));
+  }
+
+  public void waitTillPageLoaded() {
+    wait.until(driver -> ((JavascriptExecutor) driver)
+        .executeScript("return typeof jQuery != 'function' || jQuery.active == 0")
+        .equals(true));
   }
 }

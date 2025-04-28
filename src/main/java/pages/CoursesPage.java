@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 @Path("/catalog/courses")
 public class CoursesPage extends AbsBasePage {
 
@@ -40,8 +41,7 @@ public class CoursesPage extends AbsBasePage {
 
   public void clickOnCourseByName(String courseName) {
     WebElement webElement = courseLinks.stream()
-        .filter(course -> course.getText().trim()
-            .contains(courseName)) // реализациа фильтра
+        .filter(course -> course.getText().trim().contains(courseName)) // реализациа фильтра
         .findFirst()
         .orElseThrow(() -> new RuntimeException("Course not found: " + courseName));
     clickOnElement(webElement);
