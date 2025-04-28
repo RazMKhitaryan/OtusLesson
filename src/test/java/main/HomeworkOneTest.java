@@ -6,7 +6,6 @@ import com.google.inject.Inject;
 import components.HeaderComponent;
 import components.TrainingComponent;
 import extencions.UIExtension;
-import models.CourseModel;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,9 +25,6 @@ public class HomeworkOneTest {
 
   @Inject
   private CoursePage coursePage;
-
-  @Inject
-  private CourseModel courseModel;
 
   @Inject
   private TrainingComponent trainingComponent;

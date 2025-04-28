@@ -4,7 +4,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import listeners.MouseListener;
-import models.CourseModel;
 import org.openqa.selenium.WebDriver;
 import pages.CoursePage;
 import pages.CoursesPage;
@@ -45,12 +44,6 @@ public class GuicePagesModule extends AbstractModule {
   @Singleton
   public MouseListener getMouseListener() {
     return new MouseListener();
-  }
-
-  @Provides
-  @Singleton
-  public CourseModel getCourseModel() {
-    return new CourseModel();
   }
 
 }
