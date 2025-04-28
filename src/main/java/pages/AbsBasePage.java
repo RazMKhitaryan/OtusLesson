@@ -19,8 +19,6 @@ public abstract class AbsBasePage extends AbsCommon {
   public void openPage() {
     driver.get(BASE_URL + getPath());
     this.addCookie();
-    driver.navigate().refresh();
-    waitUtils.waitTillPageLoaded();
   }
 
   private String getPath() {
