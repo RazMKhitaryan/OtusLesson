@@ -93,8 +93,7 @@ public class CoursesPage extends AbsBasePage {
 
   public WebElement getOpenedCourseByName(String courseName) {
     return coursesList.stream()
-        .filter(course -> course.getText()
-            .contains(courseName))
+        .filter(course -> course.getText().equalsIgnoreCase(courseName))
         .findFirst()
         .get();
   }
