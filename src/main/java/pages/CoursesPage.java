@@ -1,12 +1,13 @@
 package pages;
 
 import annotations.Path;
+import com.google.inject.Inject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import scope.ScenScoped;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -29,8 +30,9 @@ public class CoursesPage extends AbsBasePage {
   @FindBy(xpath = "//main//section[1]//div[1]//div[2]//div//div//div")
   private List<WebElement> coursesList;
 
-  public CoursesPage(WebDriver driver) {
-    super(driver);
+  @Inject
+  public CoursesPage(ScenScoped scenScoped) {
+    super(scenScoped.getDriver());
   }
 
   public String getRandomCourseName() {

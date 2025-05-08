@@ -1,13 +1,15 @@
 package pages;
 
 import annotations.Path;
-import org.openqa.selenium.WebDriver;
+import com.google.inject.Inject;
+import scope.ScenScoped;
 
 @Path("/")
 public class MainPage extends AbsBasePage {
 
-  public MainPage(WebDriver driver) {
-    super(driver);
+  @Inject
+  public MainPage(ScenScoped scenScoped) {
+    super(scenScoped.getDriver());
   }
 
 }

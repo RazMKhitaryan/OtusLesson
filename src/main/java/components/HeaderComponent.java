@@ -1,9 +1,10 @@
 package components;
 
 import annotations.Component;
-import org.openqa.selenium.WebDriver;
+import com.google.inject.Inject;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import scope.ScenScoped;
 
 @Component("xpath://*[@id=\"__next\"]/div[2]/div[2]")
 public class HeaderComponent extends AbsBaseComponent {
@@ -11,8 +12,9 @@ public class HeaderComponent extends AbsBaseComponent {
   @FindBy(css = "span[title='Обучение']")
   private WebElement trainingField;
 
-  public HeaderComponent(WebDriver driver) {
-    super(driver);
+  @Inject
+  public HeaderComponent(ScenScoped scenScoped) {
+    super(scenScoped.getDriver());
   }
 
   public void hoverOnTrainingField() {

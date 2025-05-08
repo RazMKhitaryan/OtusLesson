@@ -1,9 +1,10 @@
 package pages;
 
 import annotations.Path;
-import org.openqa.selenium.WebDriver;
+import com.google.inject.Inject;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import scope.ScenScoped;
 
 @Path("/")
 public class CoursePage extends AbsBasePage {
@@ -11,8 +12,9 @@ public class CoursePage extends AbsBasePage {
   @FindBy(xpath = "//main//h1")
   WebElement courseTitle;
 
-  public CoursePage(WebDriver driver) {
-    super(driver);
+  @Inject
+  public CoursePage(ScenScoped scenScoped) {
+    super(scenScoped.getDriver());
   }
 
   public boolean isSelectedCoursePageOpened(String courseName) {
