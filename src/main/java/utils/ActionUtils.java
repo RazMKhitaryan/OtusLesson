@@ -14,4 +14,8 @@ public class ActionUtils {
   public void hoverOnElement(WebElement element) {
     actions.moveToElement(element).build().perform();
   }
+
+  public void moveToElementAndClick(WebElement element) {
+    actions.moveToElement(element).click().perform();
+  }
 }

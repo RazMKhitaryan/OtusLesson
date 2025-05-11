@@ -19,6 +19,9 @@ public abstract class AbsCommon<T extends AbsCommon> {
     PageFactory.initElements(driver, this);//реализациа фабрики
   }
 
+  protected void initPage(){
+    PageFactory.initElements(driver, this);
+  }
   protected T clickOnElement(WebElement element) {
     element.click();
     return (T) this;
@@ -35,5 +38,6 @@ public abstract class AbsCommon<T extends AbsCommon> {
   public void addCookie() {
     JavascriptExecutor js = (JavascriptExecutor) driver;
     js.executeScript("localStorage.setItem('cookieAccess', 'true');");
+    js.executeScript("localStorage.setItem('sticky-banner-close-time', 'Sat, 10 May 2025 22:47:47 GMT');");
   }
 }

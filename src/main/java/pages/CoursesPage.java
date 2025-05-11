@@ -5,14 +5,14 @@ import com.google.inject.Inject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import scope.ScenScoped;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Path("/catalog/courses")
@@ -29,6 +29,9 @@ public class CoursesPage extends AbsBasePage {
 
   @FindBy(xpath = "//main//section[1]//div[1]//div[2]//div//div//div")
   private List<WebElement> coursesList;
+
+  @FindBy(xpath = "//*[text()='Подготовительные курсы']")
+  private WebElement onboardingCourses;
 
   @Inject
   public CoursesPage(ScenScoped scenScoped) {
@@ -47,6 +50,11 @@ public class CoursesPage extends AbsBasePage {
         .findFirst()
         .orElseThrow(() -> new RuntimeException("Course not found: " + courseName));
     clickOnElement(webElement);
+  }
+
+  public void clickInOnboardingCourses() {
+    waitUtils.waitTillElementVisible(onboardingCourses);
+    actionUtils.moveToElementAndClick(onboardingCourses);
   }
 
   public List<WebElement> getEarliestCourses() {
@@ -85,6 +93,20 @@ public class CoursesPage extends AbsBasePage {
         .collect(Collectors.toList());
   }
 
+  public Map<String, String> getAllCoursesBigOrEqualDate(String date) {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM, yyyy", new Locale("ru"));
+    LocalDate inputDate = LocalDate.parse(date, formatter);
+
+    return coursesDates.stream()
+        .filter(el -> {
+          LocalDate parsedDate = LocalDate.parse(el.getText().split(" . ")[0].trim(), formatter);
+          return !parsedDate.isBefore(inputDate);
+        })
+        .collect(Collectors.toMap(
+            dateEl -> dateEl.findElement(By.xpath("./ancestor::a//h6/div")).getText(),
+            WebElement::getText));
+  }
+
   public boolean isCourseModelInPage(WebElement courseDate) {
     Document doc = Jsoup.parse(driver.getPageSource());
     String courseDateText = courseDate.getText().trim();
@@ -101,10 +123,38 @@ public class CoursesPage extends AbsBasePage {
   }
 
   public boolean isCourseSelected(WebElement webElement) {
+    waitUtils.waitTillElementVisible(webElement);
     if (getElementAttribute(webElement, "value").equals("true")) {
       return true;
     } else {
       return false;
     }
+  }
+  public Map<String, String> getAllCoursesPricesAndNames() {
+    try {
+      Thread.sleep(5000); // there is not other way to wait elements update
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    this.initPage();
+    String courseTitle = null;
+    String coursePrice = null;
+    HashMap<String, String> courses = new HashMap<>();
+    List<String> courseHrefs = courseLinks.stream()
+        .map(link -> link.getAttribute("href"))
+        .collect(Collectors.toList());
+
+    for (String href : courseHrefs) {
+      try {
+        Document doc = Jsoup.connect(href).get();
+
+        courseTitle = doc.select("main h3").first().text();
+        coursePrice = doc.select("div:matchesOwn(\\d+\\s*₽)").first().text();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      courses.put(courseTitle, coursePrice);
+    }
+    return courses;
   }
 }
