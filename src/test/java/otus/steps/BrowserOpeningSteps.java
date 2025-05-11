@@ -12,7 +12,7 @@ public class BrowserOpeningSteps {
   @Inject
   private ScenScoped scenScoped;
 
-  @Given("I open the browser {string}")
+  @Given("open the browser {string}")
   public void openBrowser(String browserName) {
     this.browser = browserName.toLowerCase();
     scenScoped.getDriver().get(BASE_URL);

@@ -46,12 +46,12 @@ public class CoursePageSteps {
     mainPage.openPage();
   }
 
-  @When("I hover over the training menu")
+  @When("hover over the training menu")
   public void hoverOnTraining() {
     headerComponent.hoverOnTrainingField();
   }
 
-  @When("I click on a random course from training")
+  @When("click on a random course from training")
   public void clockOnRandomCourse() {
     String courseName = trainingComponent.clickOnRandomCourseAndReturnName();
     scenScoped.set(courseName,"randomCourseName");
