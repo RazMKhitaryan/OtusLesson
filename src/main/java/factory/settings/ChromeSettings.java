@@ -6,12 +6,12 @@ import java.util.Map;
 
 public class ChromeSettings implements IBrowserSettings {
 
-  public ChromeOptions settings() {
-    ChromeOptions chromeOptions = new ChromeOptions();
+  public ChromeOptions settingsAmd64() {
+    ChromeOptions options = new ChromeOptions();
+    options.addArguments("start-maximized");
     Map<String, Object> selenoidOptions = new HashMap<>();
     selenoidOptions.put("enableVNC", true);
-    chromeOptions.setCapability("selenoid:options", selenoidOptions);
-    chromeOptions.addArguments("start-maximized");
-    return chromeOptions;
+    options.setCapability("selenoid:options", selenoidOptions);
+    return options;
   }
 }
