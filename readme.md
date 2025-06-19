@@ -26,4 +26,4 @@ cd OtusLesson
 
 ## Run the tests with command from terminal
 
-`mvn clean test -Dbrowser=chrome -DbaseUrl=https://otus.ru -Dmode=remote`
+`mvn clean test -Dbrowser=chrome -DbaseUrl=https://otus.ru -Dmode=remote -Durl=http://45.132.17.22/wd/hub`

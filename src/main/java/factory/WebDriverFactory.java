@@ -14,6 +14,7 @@ public class WebDriverFactory {
 
   private final String browserName = System.getProperty("browser", "chrome").toLowerCase();
   private final String runMode = System.getProperty("mode", "local").toLowerCase();
+  private final String vm = System.getProperty("url","http://192.168.18.52:4444/wd/hub");
 
   public WebDriver create() throws MalformedURLException {
     WebDriver driver;
@@ -21,7 +22,7 @@ public class WebDriverFactory {
     switch (browserName) {
       case "chrome":
         if ("remote".equals(runMode)) {
-          driver = new RemoteWebDriver(new URL("http://45.132.17.22/wd/hub"), new ChromeSettings().settingsAmd64());
+          driver = new RemoteWebDriver(new URL(vm), new ChromeSettings().settingsAmd64());
         } else {
           driver = new ChromeDriver(new ChromeSettings().settingsAmd64());
         }
