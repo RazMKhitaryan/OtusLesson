@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import utils.AnnotationUtils;
 
+@org.springframework.stereotype.Component
 public abstract class AbsBaseComponent extends AbsCommon {
 
   public AbsBaseComponent(WebDriver driver) {

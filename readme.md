@@ -1,6 +1,6 @@
 # OtusLesson Project
 
-This project demonstrates a Maven-based Java application with a focus on **Selenium** automation, **JUnit**, and
+This project demonstrates a Maven-based Java application with a focus on **Selenium** automation, **Testng**, and
 various other dependencies including **Guice**, **Guava**, **AssertJ**, and **JSoup**.
 
 ## Prerequisites

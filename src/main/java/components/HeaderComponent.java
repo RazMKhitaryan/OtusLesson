@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+@org.springframework.stereotype.Component
 @Component("xpath://*[@id=\"__next\"]/div[2]/div[2]")
 public class HeaderComponent extends AbsBaseComponent {
 
