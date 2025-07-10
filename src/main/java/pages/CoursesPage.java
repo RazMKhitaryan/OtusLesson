@@ -7,6 +7,8 @@ import org.jsoup.nodes.Element;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Service
 @Path("/catalog/courses")
 public class CoursesPage extends AbsBasePage {
 
@@ -29,6 +32,7 @@ public class CoursesPage extends AbsBasePage {
   @FindBy(xpath = "//main//section[1]//div[1]//div[2]//div//div//div")
   private List<WebElement> coursesList;
 
+  @Autowired
   public CoursesPage(WebDriver driver) {
     super(driver);
   }

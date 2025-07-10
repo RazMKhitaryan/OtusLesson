@@ -1,39 +1,15 @@
 package main;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-import com.google.inject.Inject;
-import components.HeaderComponent;
-import components.TrainingComponent;
-import extencions.UIExtension;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
-import org.junit.jupiter.api.extension.ExtendWith;
-import pages.CoursePage;
-import pages.CoursesPage;
-import pages.MainPage;
+import org.testng.annotations.Test;
 import java.util.List;
 
-@ExtendWith(UIExtension.class)
-public class HomeworkOneTest {
-
-  @Inject
-  private CoursesPage coursesPage;
+public class HomeworkOneTest extends TestBase {
 
   SoftAssertions softly = new SoftAssertions();
-
-  @Inject
-  private CoursePage coursePage;
-
-  @Inject
-  private TrainingComponent trainingComponent;
-
-  @Inject
-  private HeaderComponent headerComponent;
-
-  @Inject
-  private MainPage mainPage;
 
   @Test
   public void coursePageVerification() {

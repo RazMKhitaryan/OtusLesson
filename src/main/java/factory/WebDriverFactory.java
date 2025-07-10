@@ -9,15 +9,19 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.events.EventFiringDecorator;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+@Configuration
 public class WebDriverFactory {
 
   private final String browserName = System.getProperty("browser", "chrome").toLowerCase();
   private final String runMode = System.getProperty("mode", "local").toLowerCase();
   private final String vm = System.getProperty("url","http://192.168.18.52:4444/wd/hub");
 
+  @Bean
   public WebDriver create() throws MalformedURLException {
     WebDriver driver;
 

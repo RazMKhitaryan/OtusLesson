@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import java.util.List;
 
+@org.springframework.stereotype.Component
 @Component("xpath://nav/div[3]/div")
 public class TrainingComponent extends AbsBaseComponent {
 

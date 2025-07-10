@@ -1,6 +1,6 @@
 # OtusLesson Project
 
-This project demonstrates a Maven-based Java application with a focus on **Selenium** automation, **JUnit**, and
+This project demonstrates a Maven-based Java application with a focus on **Selenium** automation, **Testng**, and
 various other dependencies including **Guice**, **Guava**, **AssertJ**, and **JSoup**.
 
 ## Prerequisites
@@ -26,4 +26,4 @@ cd OtusLesson
 
 ## Run the tests with command from terminal
 
-`mvn clean test -Dbrowser=chrome -DbaseUrl=https://otus.ru -Dmode=remote -Durl=http://45.132.17.22/wd/hub -DthreadCount=3`
+`mvn clean test -Dbrowser=chrome -DbaseUrl=https://otus.ru -Dmode=remote -Durl=http://45.132.17.22/wd/hub`
