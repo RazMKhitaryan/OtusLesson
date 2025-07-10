@@ -38,13 +38,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
       <version>${guice.version}</version>
@@ -91,13 +84,7 @@
           <systemPropertyVariables>
             <browser>chrome</browser>
             <baseUrl>https://otus.ru</baseUrl>
-            <junit.jupiter.execution.parallel.enabled>true</junit.jupiter.execution.parallel.enabled>
-            <junit.jupiter.execution.parallel.mode.default>concurrent</junit.jupiter.execution.parallel.mode.default>
-            <junit.jupiter.execution.parallel.mode.classes.default>concurrent
-            </junit.jupiter.execution.parallel.mode.classes.default>
           </systemPropertyVariables>
-          <parallel>methods</parallel>
-          <threadCount>${threadCount}</threadCount>
         </configuration>
       </plugin>
       <plugin>

@@ -2,11 +2,9 @@ package factory;
 
 import exeptions.BrowserNotSupportedException;
 import factory.settings.ChromeSettings;
-import factory.settings.FirefoxSettings;
 import listeners.MouseListener;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.events.EventFiringDecorator;
 import java.net.MalformedURLException;
@@ -27,13 +25,6 @@ public class WebDriverFactory {
           driver = new RemoteWebDriver(new URL(vm), new ChromeSettings().settingsAmd64());
         } else {
           driver = new ChromeDriver(new ChromeSettings().settingsAmd64());
-        }
-        break;
-      case "firefox":
-        if ("remote".equals(runMode)) {
-          driver = new RemoteWebDriver(new URL(vm), new FirefoxSettings().settings());
-        } else {
-          driver = new FirefoxDriver(new FirefoxSettings().settings());
         }
         break;
       default:

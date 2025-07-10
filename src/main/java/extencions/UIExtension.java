@@ -9,25 +9,26 @@ import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.openqa.selenium.WebDriver;
+import pages.MainPage;
 import java.net.MalformedURLException;
 
 public class UIExtension implements BeforeEachCallback, AfterEachCallback {
-  private static final ThreadLocal<WebDriver> DRIVER = new ThreadLocal<>();
 
-  @Override
-  public void beforeEach(ExtensionContext context) throws MalformedURLException {
-    WebDriver webDriver = new WebDriverFactory().create();
-    DRIVER.set(webDriver);
-    Injector injector = Guice.createInjector(new GuicePagesModule(webDriver), new GuiceComponentsModule(webDriver));
-    injector.injectMembers(context.getTestInstance().get());
-  }
+  private Injector injector;
 
   @Override
   public void afterEach(ExtensionContext context) {
-    WebDriver webDriver = DRIVER.get();
-    if (webDriver != null) {
-      webDriver.quit();
-      DRIVER.remove();
+    WebDriver driver = injector.getInstance(WebDriver.class);
+    injector.getInstance(MainPage.class).openPage(); // возврат страницы в исходное состояние
+    if (driver != null) {
+      driver.quit();
     }
+  }
+
+  @Override
+  public void beforeEach(ExtensionContext context) throws MalformedURLException {
+    WebDriver driver = new WebDriverFactory().create();
+    injector = Guice.createInjector(new GuicePagesModule(driver), new GuiceComponentsModule(driver));
+    injector.injectMembers(context.getTestInstance().get());
   }
 }

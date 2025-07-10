@@ -1,19 +1,21 @@
 package factory.settings;
 
 import org.openqa.selenium.firefox.FirefoxOptions;
-import java.util.HashMap;
-import java.util.Map;
 
 public class FirefoxSettings {
 
   public FirefoxOptions settings() {
     FirefoxOptions options = new FirefoxOptions();
-    options.addArguments("--width=1920");
-    options.addArguments("--height=1080");
-    Map<String, Object> selenoidOptions = new HashMap<>();
-    selenoidOptions.put("enableVNC", true);
-    options.setCapability("selenoid:options", selenoidOptions);
+
+    // Browser-specific prefs and args
+    options.addPreference("dom.webnotifications.enabled", false);
+    options.addArguments("--no-sandbox");
+
+    // Session-level capabilities
+    options.setCapability("browserVersion", "latest");
+    options.setCapability("platformName", "linux");
+    options.setCapability("acceptInsecureCerts", true);
+
     return options;
   }
-
 }
