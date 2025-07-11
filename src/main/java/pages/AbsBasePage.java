@@ -7,15 +7,14 @@ import org.openqa.selenium.WebElement;
 import utils.AnnotationUtils;
 import java.util.List;
 
-public abstract class AbsBasePage extends AbsCommon {
+public abstract class AbsBasePage extends AbsCommon<AbsBasePage> {
   private final static String BASE_URL = System.getProperty("baseUrl", "https://otus.ru");
 
-  public AbsBasePage(WebDriver driver) {
-    super(driver);
+  public AbsBasePage() {
+    super();
     waitUtils.waitTillPageLoaded();
     waitUtils.waitTillPageReady();
   }
-
 
   public void openPage() {
     driver.get(BASE_URL + getPath());
@@ -29,7 +28,7 @@ public abstract class AbsBasePage extends AbsCommon {
     return new AnnotationUtils().getAnnotationInstance(this.getClass(), Path.class).value();
   }
 
-  protected void pageLoadedCondition(List<WebElement> element) {
-    waitUtils.waitTillElementVisible(element.getFirst());
+  protected void pageLoadedCondition(List<WebElement> elements) {
+    waitUtils.waitTillElementVisible(elements.getFirst());
   }
 }

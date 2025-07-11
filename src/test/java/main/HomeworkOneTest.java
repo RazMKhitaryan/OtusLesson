@@ -2,51 +2,33 @@ package main;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.inject.Inject;
 import components.HeaderComponent;
 import components.TrainingComponent;
-import extencions.UIExtension;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.testng.annotations.Test;
 import pages.CoursePage;
 import pages.CoursesPage;
 import pages.MainPage;
 import java.util.List;
 
-@ExtendWith(UIExtension.class)
-public class HomeworkOneTest {
-
-  @Inject
-  private CoursesPage coursesPage;
-
+public class HomeworkOneTest extends TestBase {
   SoftAssertions softly = new SoftAssertions();
-
-  @Inject
-  private CoursePage coursePage;
-
-  @Inject
-  private TrainingComponent trainingComponent;
-
-  @Inject
-  private HeaderComponent headerComponent;
-
-  @Inject
-  private MainPage mainPage;
 
   @Test
   public void coursePageVerification() {
+    CoursesPage coursesPage = new CoursesPage();
     coursesPage.openPage();
     String randomCourseName = coursesPage.getRandomCourseName();
     coursesPage.clickOnCourseByName(randomCourseName);
-    assertThat(coursePage.isSelectedCoursePageOpened(randomCourseName))
+    assertThat(new CoursePage().isSelectedCoursePageOpened(randomCourseName))
         .as("Check that course page for '%s' is opened" + randomCourseName)
         .isTrue();
   }
 
   @Test
   public void earliestAndLatestCoursesVerification() {
+    CoursesPage coursesPage = new CoursesPage();
     coursesPage.openPage();
     List<WebElement> earliestCourses = coursesPage.getEarliestCourses();
     List<WebElement> latestCourses = coursesPage.getLatestCourses();
@@ -64,9 +46,10 @@ public class HomeworkOneTest {
 
   @Test
   public void selectedCourseVerification() {
-    mainPage.openPage();
-    headerComponent.hoverOnTrainingField();
-    String courseName = trainingComponent.clickOnRandomCourseAndReturnName();
+    new MainPage().openPage();
+    new HeaderComponent().hoverOnTrainingField();
+    String courseName = new TrainingComponent().clickOnRandomCourseAndReturnName();
+    CoursesPage coursesPage = new CoursesPage();
     assertThat(coursesPage.isCourseSelected(coursesPage.getOpenedCourseByName(courseName)))
         .as("Course should be present in the page" + courseName)
         .isTrue();

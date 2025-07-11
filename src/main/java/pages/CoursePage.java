@@ -11,8 +11,8 @@ public class CoursePage extends AbsBasePage {
   @FindBy(xpath = "//main//h1")
   WebElement courseTitle;
 
-  public CoursePage(WebDriver driver) {
-    super(driver);
+  public CoursePage() {
+    super();
   }
 
   public boolean isSelectedCoursePageOpened(String courseName) {

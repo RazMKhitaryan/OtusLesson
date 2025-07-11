@@ -8,8 +8,8 @@ import utils.AnnotationUtils;
 
 public abstract class AbsBaseComponent extends AbsCommon {
 
-  public AbsBaseComponent(WebDriver driver) {
-    super(driver);
+  public AbsBaseComponent() {
+    super();
   }
 
   public void verifyComponentLoaded() {
