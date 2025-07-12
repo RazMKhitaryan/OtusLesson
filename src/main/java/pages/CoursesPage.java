@@ -4,105 +4,101 @@ import annotations.Path;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
+@Service
 @Path("/catalog/courses")
 public class CoursesPage extends AbsBasePage {
 
+  private static final DateTimeFormatter DATE_FORMATTER =
+      DateTimeFormatter.ofPattern("d MMMM, yyyy", new Locale("ru"));
+  private final Random random = new Random();
+
   @FindBy(xpath = "//main//section[2]//a")
-  List<WebElement> courseLinks;
+  private List<WebElement> courseLinks;
 
   @FindBy(xpath = "//main//section[2]//div[2]//a//h6/div")
-  List<WebElement> coursesNames;
-
-  @FindBy(xpath = "//section[2]//a/div[2]/div/div")
-  List<WebElement> coursesDates;
+  private List<WebElement> coursesNames;
 
   @FindBy(xpath = "//main//section[1]//div[1]//div[2]//div//div//div")
   private List<WebElement> coursesList;
-
-  public CoursesPage() {
-    super();
-  }
+  @FindBy(xpath = "//section[2]//a/div[2]/div/div")
+  private List<WebElement> coursesDates;
 
   public String getRandomCourseName() {
-    List<String> names = coursesNames.stream().map(WebElement::getText).toList();
-    int index = (int) (Math.random() * coursesNames.size());
-    return names.get(index);
+    waitUtils.waitTillElementVisible(coursesNames.get(0));
+    List<String> names = coursesNames.stream()
+        .map(this::getText)
+        .toList();
+    return names.get(random.nextInt(names.size()));
   }
 
   public void clickOnCourseByName(String courseName) {
-    WebElement webElement = courseLinks.stream()
-        .filter(course -> course.getText().trim().contains(courseName)) // реализациа фильтра
+    WebElement courseElement = courseLinks.stream()
+        .filter(course -> getText(course).trim().contains(courseName))
         .findFirst()
         .orElseThrow(() -> new RuntimeException("Course not found: " + courseName));
-    clickOnElement(webElement);
+    clickOnElement(courseElement);
+  }
+
+  private LocalDate parseCourseDate(WebElement courseDate) {
+    String dateText = getText(courseDate).trim().split(" . ")[0].trim();
+    return LocalDate.parse(dateText, DATE_FORMATTER);
   }
 
   public List<WebElement> getEarliestCourses() {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM, yyyy", new Locale("ru"));
-    Optional<LocalDate> earliestDateOpt = coursesDates.stream()
-        .map(course -> {
-          String dateText = course.getText().trim().split(" . ")[0].trim();
-          return LocalDate.parse(dateText, formatter);
-        })
-        .reduce((d1, d2) -> d1.isBefore(d2) ? d1 : d2);
-    if (earliestDateOpt.isEmpty()) {
+    if (coursesDates.isEmpty()) {
       return List.of();
     }
-    LocalDate earliestDate = earliestDateOpt.get();
+
+    LocalDate earliestDate = coursesDates.stream()
+        .map(this::parseCourseDate)
+        .min(LocalDate::compareTo)
+        .orElseThrow();
+
     return coursesDates.stream()
-        .filter(course -> {
-          String dateText = course.getText().trim().split(" . ")[0].trim();
-          return LocalDate.parse(dateText, formatter).equals(earliestDate);
-        })
+        .filter(course -> parseCourseDate(course).equals(earliestDate))
         .collect(Collectors.toList());
   }
 
-
   public List<WebElement> getLatestCourses() {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM, yyyy", new Locale("ru"));
-    Optional<LocalDate> latestDates = coursesDates.stream()
-        .map(course -> LocalDate.parse(course.getText().split(" . ")[0].trim(), formatter))
-        .reduce(
-            (d1, d2) -> d1.isAfter(d2) ? d1 : d2); // необходимо использовать stream api и reduce.
-    if (latestDates.isEmpty()) {
+    if (coursesDates.isEmpty()) {
       return List.of();
     }
-    LocalDate latestDate = latestDates.get();
+
+    LocalDate latestDate = coursesDates.stream()
+        .map(this::parseCourseDate)
+        .max(LocalDate::compareTo)
+        .orElseThrow();
+
     return coursesDates.stream()
-        .filter(course -> LocalDate.parse(course.getText().split(" . ")[0].trim(), formatter).equals(latestDate))
+        .filter(course -> parseCourseDate(course).equals(latestDate))
         .collect(Collectors.toList());
   }
 
   public boolean isCourseModelInPage(WebElement courseDate) {
     Document doc = Jsoup.parse(driver.getPageSource());
-    String courseDateText = courseDate.getText().trim();
-    String query = String.format("div:contains(%s)", courseDateText);
-    Element element = doc.select(query).first();
+    String courseDateText = getText(courseDate).trim();
+    Element element = doc.select(String.format("div:contains(%s)", courseDateText)).first();
     return element != null;
   }
 
   public WebElement getOpenedCourseByName(String courseName) {
     return coursesList.stream()
-        .filter(course -> course.getText().equalsIgnoreCase(courseName))
+        .filter(course -> getText(course).equalsIgnoreCase(courseName))
         .findFirst()
-        .get();
+        .orElseThrow(() -> new RuntimeException("Course not found: " + courseName));
   }
 
   public boolean isCourseSelected(WebElement webElement) {
-    if (getElementAttribute(webElement, "value").equals("true")) {
-      return true;
-    } else {
-      return false;
-    }
+    return "true".equals(getElementAttribute(webElement, "value"));
   }
 }

@@ -10,9 +10,12 @@ public class FirefoxSettings {
     FirefoxOptions options = new FirefoxOptions();
     options.addArguments("--width=1920");
     options.addArguments("--height=1080");
+
+    // Add Selenoid capabilities
     Map<String, Object> selenoidOptions = new HashMap<>();
     selenoidOptions.put("enableVNC", true);
     options.setCapability("selenoid:options", selenoidOptions);
+
     return options;
   }
 

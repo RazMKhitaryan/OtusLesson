@@ -2,33 +2,35 @@ package pages;
 
 import annotations.Path;
 import common.AbsCommon;
+import jakarta.annotation.PostConstruct;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import utils.AnnotationUtils;
-import java.util.List;
 
 public abstract class AbsBasePage extends AbsCommon<AbsBasePage> {
-  private final static String BASE_URL = System.getProperty("baseUrl", "https://otus.ru");
 
-  public AbsBasePage() {
-    super();
-    waitUtils.waitTillPageLoaded();
-    waitUtils.waitTillPageReady();
+  @Value("${baseUrl:https://otus.ru}")
+  private String baseUrl;
+
+  @Autowired
+  private AnnotationUtils annotationUtils;
+
+  private String pagePath;
+
+  @PostConstruct
+  public void postConstructor() {
+    initializePath();
+  }
+
+  private void initializePath() {
+    pagePath = annotationUtils.getAnnotationInstance(this.getClass(), Path.class).value();
   }
 
   public void openPage() {
-    driver.get(BASE_URL + getPath());
-    this.addCookie();
+    WebDriver driver = getDriver();
+    driver.get(baseUrl + pagePath);
+    addCookie();
     driver.navigate().refresh();
-    waitUtils.waitTillPageLoaded();
-    waitUtils.waitTillPageReady();
-  }
-
-  private String getPath() {
-    return new AnnotationUtils().getAnnotationInstance(this.getClass(), Path.class).value();
-  }
-
-  protected void pageLoadedCondition(List<WebElement> elements) {
-    waitUtils.waitTillElementVisible(elements.getFirst());
   }
 }

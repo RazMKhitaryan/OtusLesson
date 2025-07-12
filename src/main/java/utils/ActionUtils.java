@@ -1,17 +1,39 @@
 package utils;
 
-import org.openqa.selenium.WebDriver;
+import factory.WebDriverFactory;
+import jakarta.annotation.PostConstruct;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ActionUtils {
   private Actions actions;
 
-  public ActionUtils(WebDriver driver) {
-    this.actions = new Actions(driver);
+  @Autowired
+  private WebDriverFactory webDriverFactory;
+
+  // No @PostConstruct needed
+
+  private void ensureInitialized() {
+    if (this.actions == null) {
+      try {
+        this.actions = new Actions(webDriverFactory.getDriver());
+      } catch (IllegalStateException e) {
+        // Create the driver if it doesn't exist yet
+        this.actions = new Actions(webDriverFactory.create());
+      }
+    }
   }
 
   public void hoverOnElement(WebElement element) {
+    ensureInitialized();
     actions.moveToElement(element).build().perform();
+  }
+
+  public Actions getActions() {
+    ensureInitialized();
+    return actions;
   }
 }

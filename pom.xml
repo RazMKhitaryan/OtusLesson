@@ -9,42 +9,57 @@
   <artifactId>OtusLesson</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <properties>
-    <maven.compiler.source>21</maven.compiler.source>
-    <maven.compiler.target>21</maven.compiler.target>
-
-    <maven.surefire.version>3.5.3</maven.surefire.version>
-    <testng.version>7.11.0</testng.version>
-
-    <selenium.version>4.34.0</selenium.version>
-    <assertj.version>3.27.3</assertj.version>
-    <jsoup.version>1.18.3</jsoup.version>
-    <threadCount>3</threadCount>
-
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.7.18</version>
+    <version>3.2.1</version>
   </parent>
 
+  <properties>
+    <java.version>21</java.version>
+    <maven.surefire.version>3.5.3</maven.surefire.version>
+    <testng.version>7.7.1</testng.version>
+    <selenium.version>4.34.0</selenium.version>
+    <assertj.version>3.24.2</assertj.version>
+    <jsoup.version>1.16.2</jsoup.version>
+    <threadCount>3</threadCount>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
   <dependencies>
+    <!-- Spring Boot -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.24.2</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- TestNG -->
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
       <version>${testng.version}</version>
-      <scope>test</scope>
     </dependency>
 
-
+    <!-- Selenium -->
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
       <version>${selenium.version}</version>
     </dependency>
 
+    <!-- AssertJ -->
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
@@ -52,6 +67,7 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- Jsoup -->
     <dependency>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
@@ -61,25 +77,31 @@
 
   <build>
     <plugins>
+      <!-- Spring Boot Maven Plugin -->
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
 
+      <!-- Compiler Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
         <configuration>
-          <source>${maven.compiler.source}</source>
-          <target>${maven.compiler.target}</target>
+          <release>21</release>
           <encoding>${project.build.sourceEncoding}</encoding>
         </configuration>
       </plugin>
 
+      <!-- Surefire Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven.surefire.version}</version>
         <configuration>
           <suiteXmlFiles>
-            <suiteXmlFile>testng.xml</suiteXmlFile>
+            <suiteXmlFile>${basedir}/testng.xml</suiteXmlFile>
           </suiteXmlFiles>
           <systemPropertyVariables>
             <browser>chrome</browser>
@@ -87,13 +109,24 @@
           </systemPropertyVariables>
           <parallel>methods</parallel>
           <threadCount>${threadCount}</threadCount>
+          <includes>
+            <include>**/*Test.java</include>
+          </includes>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-testng</artifactId>
+            <version>${maven.surefire.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
 
+      <!-- Checkstyle Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>3.6.0</version>
+        <version>3.3.1</version>
         <configuration>
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
           <configLocation>${project.build.sourceDirectory}/../resources/checkstyle.xml</configLocation>
@@ -109,6 +142,7 @@
         </executions>
       </plugin>
 
+      <!-- SpotBugs Plugin -->
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
@@ -123,7 +157,6 @@
           </execution>
         </executions>
       </plugin>
-
     </plugins>
   </build>
 
