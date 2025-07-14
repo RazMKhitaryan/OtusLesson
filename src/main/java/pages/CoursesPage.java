@@ -85,13 +85,14 @@ public class CoursesPage extends AbsBasePage {
   }
 
   public boolean isCourseModelInPage(WebElement courseDate) {
-    Document doc = Jsoup.parse(driver.getPageSource());
+    Document doc = Jsoup.parse(webDriverFactory.getDriver().getPageSource());
     String courseDateText = getText(courseDate).trim();
     Element element = doc.select(String.format("div:contains(%s)", courseDateText)).first();
     return element != null;
   }
 
   public WebElement getOpenedCourseByName(String courseName) {
+    initPages();
     return coursesList.stream()
         .filter(course -> getText(course).equalsIgnoreCase(courseName))
         .findFirst()

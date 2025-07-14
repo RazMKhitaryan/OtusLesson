@@ -21,7 +21,7 @@ public class WebDriverFactory {
   private final String vm = System.getProperty("url", "http://192.168.18.52:4444/wd/hub");
   private static final ThreadLocal<WebDriver> DRIVER = new ThreadLocal<>();
 
-  public WebDriver getDriver() {
+  public synchronized WebDriver getDriver() {
     return DRIVER.get();
   }
 
@@ -62,9 +62,11 @@ public class WebDriverFactory {
     WebDriver driver = DRIVER.get();
     if (driver != null) {
       try {
-        driver.quit();
-      } finally {
         DRIVER.remove();
+        driver.close();
+        driver.quit();
+      } catch (Exception e) {
+        throw new RuntimeException(e);
       }
     }
   }

@@ -2,6 +2,7 @@ package components;
 
 import annotations.Component;
 import common.AbsCommon;
+import jakarta.annotation.PostConstruct;
 import org.openqa.selenium.By;
 import org.springframework.beans.factory.annotation.Autowired;
 import utils.AnnotationUtils;
@@ -13,7 +14,9 @@ public abstract class AbsBaseComponent extends AbsCommon<AbsBaseComponent> {
 
   private By componentSelector;
 
-  public void postConstructor() {
+  @PostConstruct
+  public void initComponents() {
+    initPages();
     initializeSelector();
   }
   public void verifyComponentLoaded() {

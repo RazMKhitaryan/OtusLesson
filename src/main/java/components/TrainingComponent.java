@@ -17,6 +17,7 @@ public class TrainingComponent extends AbsBaseComponent {
 
   public String clickOnRandomCourseAndReturnName() {
     verifyComponentLoaded();
+    initComponents();
     waitUtils.waitTillElementVisible(coursesList.get(0));
 
     int index = random.nextInt(coursesList.size());

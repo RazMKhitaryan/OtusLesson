@@ -14,13 +14,13 @@ public abstract class TestBase extends AbstractTestNGSpringContextTests {
   @Autowired
   private WebDriverFactory webDriverFactory;
 
-  @BeforeMethod
+  @BeforeMethod(alwaysRun = true)
   public void setUp() {
     System.out.println("Initializing WebDriver...");
     webDriverFactory.create();
   }
 
-  @AfterMethod()
+  @AfterMethod(alwaysRun = true)
   public void tearDown() {
     webDriverFactory.killDriver();
   }

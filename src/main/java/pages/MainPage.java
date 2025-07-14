@@ -6,9 +6,4 @@ import org.springframework.stereotype.Service;
 @Service
 @Path("/")
 public class MainPage extends AbsBasePage {
-
-  public MainPage() {
-    super();
-  }
-
 }

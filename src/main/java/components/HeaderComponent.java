@@ -14,6 +14,7 @@ public class HeaderComponent extends AbsBaseComponent {
 
   public void hoverOnTrainingField() {
     verifyComponentLoaded();
+    initComponents();
     waitUtils.waitTillElementVisible(trainingField);
     actionUtils.hoverOnElement(trainingField);
   }

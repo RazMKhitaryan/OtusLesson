@@ -13,6 +13,7 @@ public class CoursePage extends AbsBasePage {
   private WebElement courseTitle;
 
   public boolean isSelectedCoursePageOpened(String courseName) {
+    initPages();
     waitUtils.waitTillElementVisible(courseTitle);
     return getText(courseTitle).contains(courseName);
   }

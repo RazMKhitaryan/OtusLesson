@@ -3,7 +3,6 @@ package common;
 import factory.WebDriverFactory;
 import jakarta.annotation.PostConstruct;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ public abstract class AbsCommon<T extends AbsCommon<T>> {
   @Autowired
   protected WebDriverFactory webDriverFactory;
 
-  protected WebDriver driver;
   @Autowired
   protected WaitUtils waitUtils;
 
@@ -23,19 +21,7 @@ public abstract class AbsCommon<T extends AbsCommon<T>> {
 
   @PostConstruct
   public void initPages() {
-    PageFactory.initElements(getDriver(), this);
-  }
-
-  protected WebDriver getDriver() {
-    if (this.driver == null) {
-      try {
-        this.driver = webDriverFactory.getDriver();
-      } catch (IllegalStateException e) {
-        e.printStackTrace();
-      }
-      PageFactory.initElements(driver, this);
-    }
-    return this.driver;
+    PageFactory.initElements(webDriverFactory.getDriver(), this);
   }
 
   protected T clickOnElement(WebElement element) {
@@ -55,7 +41,7 @@ public abstract class AbsCommon<T extends AbsCommon<T>> {
   }
 
   public void addCookie() {
-    JavascriptExecutor js = (JavascriptExecutor) getDriver();
+    JavascriptExecutor js = (JavascriptExecutor) webDriverFactory.getDriver();
     js.executeScript("localStorage.setItem('cookieAccess', 'true');");
   }
 }

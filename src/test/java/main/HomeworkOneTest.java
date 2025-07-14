@@ -62,7 +62,6 @@ public class HomeworkOneTest extends TestBase {
     mainPage.openPage();
     headerComponent.hoverOnTrainingField();
     String courseName = trainingComponent.clickOnRandomCourseAndReturnName();
-
     assertThat(coursesPage.isCourseSelected(coursesPage.getOpenedCourseByName(courseName)))
         .as("Course '%s' should be marked as selected", courseName)
         .isTrue();

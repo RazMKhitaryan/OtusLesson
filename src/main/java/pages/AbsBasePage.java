@@ -3,7 +3,6 @@ package pages;
 import annotations.Path;
 import common.AbsCommon;
 import jakarta.annotation.PostConstruct;
-import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import utils.AnnotationUtils;
@@ -20,6 +19,7 @@ public abstract class AbsBasePage extends AbsCommon<AbsBasePage> {
 
   @PostConstruct
   public void postConstructor() {
+    initPages();
     initializePath();
   }
 
@@ -28,9 +28,10 @@ public abstract class AbsBasePage extends AbsCommon<AbsBasePage> {
   }
 
   public void openPage() {
-    WebDriver driver = getDriver();
-    driver.get(baseUrl + pagePath);
+    webDriverFactory.getDriver().get(baseUrl + pagePath);
     addCookie();
-    driver.navigate().refresh();
+    webDriverFactory.getDriver().navigate().refresh();
+    waitUtils.waitForPageLoad();
+    initPages();
   }
 }
