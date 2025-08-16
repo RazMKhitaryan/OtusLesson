@@ -2,8 +2,24 @@ pipeline {
     agent { label 'maven' }
 
     parameters {
-        choice(name: 'BROWSER', choices: ['chrome', 'firefox', 'edge'], description: 'Choose browser for the tests')
-        string(name: 'BRANCH', defaultValue: 'project-with-spring-testng', description: 'Git branch to run tests from')
+        choice(
+            name: 'BROWSER',
+            choices: ['chrome', 'firefox'],
+            description: 'Choose browser for the tests'
+        )
+
+        // Git parameter (requires Git Parameter Plugin)
+        gitParameter(
+            branch: '',
+            branchFilter: 'origin/(.*)',
+            defaultValue: 'project-with-spring-testng',
+            description: 'Select a Git branch to build',
+            name: 'BRANCH',
+            quickFilterEnabled: true,
+            selectedValue: 'DEFAULT',
+            sortMode: 'DESCENDING',
+            type: 'PT_BRANCH'
+        )
     }
 
     stages {
@@ -45,7 +61,7 @@ pipeline {
                 jdk: '',
                 properties: [],
                 reportBuildPolicy: 'ALWAYS',
-                results: [[path: 'target/allure-results']]
+                results: [[path: 'allure-results']]
             ])
             echo "Pipeline finished"
         }
