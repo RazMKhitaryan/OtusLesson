@@ -22,21 +22,24 @@
     <guava.version>32.1.2-jre</guava.version>
     <assertj.version>3.27.3</assertj.version>
     <jsoup.version>1.18.3</jsoup.version>
-
+    <allure.version>2.27.0</allure.version>
   </properties>
 
   <dependencies>
+    <!-- Selenium -->
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
       <version>${selenium.version}</version>
     </dependency>
+
+    <!-- JUnit 5 -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <version>${junit.version}</version>
+      <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
@@ -44,18 +47,29 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- Allure JUnit 5 -->
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-junit5</artifactId>
+      <version>${allure.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Guice -->
     <dependency>
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
       <version>${guice.version}</version>
     </dependency>
 
+    <!-- Guava -->
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>${guava.version}</version>
     </dependency>
 
+    <!-- AssertJ -->
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
@@ -63,16 +77,17 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- Jsoup -->
     <dependency>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
       <version>${jsoup.version}</version>
     </dependency>
-
   </dependencies>
 
   <build>
     <plugins>
+      <!-- Compiler -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -83,23 +98,37 @@
         </configuration>
       </plugin>
 
+      <!-- Surefire (JUnit 5 + parallel) -->
       <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>${maven.surefire.version}</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven.surefire.version}</version>
         <configuration>
           <systemPropertyVariables>
             <browser>chrome</browser>
             <baseUrl>https://otus.ru</baseUrl>
             <junit.jupiter.execution.parallel.enabled>true</junit.jupiter.execution.parallel.enabled>
             <junit.jupiter.execution.parallel.mode.default>concurrent</junit.jupiter.execution.parallel.mode.default>
-            <junit.jupiter.execution.parallel.mode.classes.default>concurrent
-            </junit.jupiter.execution.parallel.mode.classes.default>
+            <junit.jupiter.execution.parallel.mode.classes.default>concurrent</junit.jupiter.execution.parallel.mode.classes.default>
           </systemPropertyVariables>
           <parallel>methods</parallel>
           <threadCount>${threadCount}</threadCount>
+          <useModulePath>false</useModulePath>
         </configuration>
       </plugin>
+
+      <!-- Allure Maven plugin -->
+      <plugin>
+        <groupId>io.qameta.allure</groupId>
+        <artifactId>allure-maven</artifactId>
+        <version>2.8</version>
+        <configuration>
+          <resultsDirectory>allure-results</resultsDirectory>
+          <reportDirectory>allure-report</reportDirectory>
+        </configuration>
+      </plugin>
+
+      <!-- Checkstyle -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
@@ -118,6 +147,8 @@
           </execution>
         </executions>
       </plugin>
+
+      <!-- SpotBugs -->
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
