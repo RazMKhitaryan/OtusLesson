@@ -73,6 +73,12 @@
       <artifactId>jsoup</artifactId>
       <version>${jsoup.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-testng</artifactId>
+      <version>2.22.1</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -156,6 +162,15 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>io.qameta.allure</groupId>
+        <artifactId>allure-maven</artifactId>
+        <version>2.8</version>
+        <configuration>
+          <resultsDirectory>allure-results</resultsDirectory>
+          <reportDirectory>allure-report</reportDirectory>
+        </configuration>
       </plugin>
     </plugins>
   </build>
