@@ -2,7 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.example</groupId>
@@ -10,68 +9,53 @@
   <version>1.0-SNAPSHOT</version>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
+    <maven.surefire.version>3.5.3</maven.surefire.version>
+    <maven.checkstyle.version>3.6.0</maven.checkstyle.version>
+    <maven.compiler.version>3.14.0</maven.compiler.version>
+    <maven.spotbugs.version>4.9.3.0</maven.spotbugs.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <selenium.version>4.31.0</selenium.version>
-    <junit.version>5.12.1</junit.version>
     <guice.version>7.0.0</guice.version>
+    <junit.version>5.12.1</junit.version>
     <guava.version>32.1.2-jre</guava.version>
     <assertj.version>3.27.3</assertj.version>
     <jsoup.version>1.18.3</jsoup.version>
-    <maven.surefire.version>3.5.3</maven.surefire.version>
-    <allure.version>2.27.0</allure.version>
+
   </properties>
 
   <dependencies>
-    <!-- Selenium -->
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
       <version>${selenium.version}</version>
     </dependency>
-
-    <!-- JUnit 5 -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <version>${junit.version}</version>
-      <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.junit.platform</groupId>
-      <artifactId>junit-platform-launcher</artifactId>
-      <version>1.12.1</version>
-      <scope>test</scope>
-    </dependency>
 
-    <!-- Allure JUnit 5 integration -->
-    <dependency>
-      <groupId>io.qameta.allure</groupId>
-      <artifactId>allure-junit5</artifactId>
-      <version>${allure.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- Guice & Guava -->
     <dependency>
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
       <version>${guice.version}</version>
     </dependency>
+
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>${guava.version}</version>
     </dependency>
 
-    <!-- AssertJ for fluent assertions -->
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
@@ -79,55 +63,74 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- Jsoup for HTML parsing -->
     <dependency>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
       <version>${jsoup.version}</version>
     </dependency>
+
   </dependencies>
 
   <build>
     <plugins>
-      <!-- Compiler plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.14.0</version>
+        <version>${maven.compiler.version}</version>
         <configuration>
-          <source>${maven.compiler.source}</source>
           <target>${maven.compiler.target}</target>
+          <source>${maven.compiler.source}</source>
         </configuration>
       </plugin>
 
-      <!-- Surefire plugin -->
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${maven.surefire.version}</version>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven.surefire.version}</version>
         <configuration>
-          <includes>
-            <include>**/*Test.java</include>
-          </includes>
-          <parallel>methods</parallel>
-          <threadCount>3</threadCount>
           <systemPropertyVariables>
             <browser>chrome</browser>
             <baseUrl>https://otus.ru</baseUrl>
+            <junit.jupiter.execution.parallel.enabled>true</junit.jupiter.execution.parallel.enabled>
+            <junit.jupiter.execution.parallel.mode.default>concurrent</junit.jupiter.execution.parallel.mode.default>
+            <junit.jupiter.execution.parallel.mode.classes.default>concurrent
+            </junit.jupiter.execution.parallel.mode.classes.default>
           </systemPropertyVariables>
-          <testFailureIgnore>true</testFailureIgnore>
+          <parallel>methods</parallel>
+          <threadCount>${threadCount}</threadCount>
         </configuration>
       </plugin>
-
-      <!-- Allure Maven plugin -->
       <plugin>
-        <groupId>io.qameta.allure</groupId>
-        <artifactId>allure-maven</artifactId>
-        <version>2.8</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>${maven.checkstyle.version}</version>
         <configuration>
-          <resultsDirectory>allure-results</resultsDirectory>
-          <reportDirectory>allure-report</reportDirectory>
+          <includeTestSourceDirectory>true</includeTestSourceDirectory>
+          <configLocation>${project.build.sourceDirectory}/../resources/checkstyle.xml</configLocation>
         </configuration>
+        <executions>
+          <execution>
+            <id>analyze-compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>${maven.spotbugs.version}</version>
+        <executions>
+          <execution>
+            <id>analyze-compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
