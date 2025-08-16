@@ -1,6 +1,11 @@
 pipeline {
     agent { label 'maven' }
 
+    parameters {
+        choice(name: 'BROWSER', choices: ['chrome', 'firefox', 'edge'], description: 'Choose browser for the tests')
+        string(name: 'BRANCH', defaultValue: 'project-with-spring-testng', description: 'Git branch to run tests from')
+    }
+
     stages {
         stage('Test Allure CLI') {
             steps {
@@ -11,7 +16,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout([$class: 'GitSCM',
-                          branches: [[name: 'project-with-spring-testng']],
+                          branches: [[name: "${params.BRANCH}"]],
                           userRemoteConfigs: [[url: 'https://github.com/RazMKhitaryan/OtusLesson.git']]
                 ])
             }
@@ -19,10 +24,9 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                // Run tests; do not fail pipeline even if tests fail
                 sh """
                 mvn clean test \
-                    -Dbrowser=chrome \
+                    -Dbrowser=${params.BROWSER} \
                     -DbaseUrl=https://otus.ru \
                     -Dmode=remote \
                     -Durl=http://45.132.17.22/wd/hub \
