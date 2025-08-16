@@ -75,7 +75,7 @@ pipeline {
 
                    def passedCount = json.statistic.passed
                    def totalCount = json.statistic.total
-                   def message = "Allure Report: ${passedCount}/${totalCount} tests passed ✅"
+                   def message = "Allure Report Web run: ${passedCount}/${totalCount} tests passed ✅"
 
                    def botToken = '8228531250:AAF4-CNqenOBmhO_U0qOq1pcpvMDNY0RvBU'
                    def chatId = '6877916742'
