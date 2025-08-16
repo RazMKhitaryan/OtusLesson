@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout([$class: 'GitSCM',
-                          branches: [[name: 'master']], // fixed branch
+                          branches: [[name: 'master']],
                           userRemoteConfigs: [[url: 'https://github.com/RazMKhitaryan/OtusLesson.git']]
                 ])
             }
@@ -19,20 +19,23 @@ pipeline {
 
         stage('Run Tests') {
             steps {
+                // Run tests but do not fail the pipeline if there are test errors
                 sh """
                 mvn clean test \
                     -Dbrowser=chrome \
                     -DbaseUrl=https://otus.ru \
                     -Dmode=remote \
                     -Durl=http://45.132.17.22/wd/hub \
-                    -DthreadCount=3
+                    -DthreadCount=3 \
+                    -Dsurefire.testFailureIgnore=true
                 """
             }
         }
 
         stage('Allure Report Publisher') {
             steps {
-                echo "Tests finished, publishing Allure results..."
+                echo "Publishing Allure results..."
+                // Allure stage will always run even if tests had errors
                 allure([
                     includeProperties: false,
                     jdk: '',
