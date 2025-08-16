@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout([$class: 'GitSCM',
-                          branches: [[name: 'main']],
+                          branches: [[name: 'master']], // fixed branch
                           userRemoteConfigs: [[url: 'https://github.com/RazMKhitaryan/OtusLesson.git']]
                 ])
             }
