@@ -67,25 +67,31 @@ pipeline {
             sh 'allure generate --clean allure-results'
             echo "allure folder generated"
 
-           script {
-               def summaryFile = readFile('allure-report/widgets/summary.json')
-               def summary = new groovy.json.JsonSlurper().parseText(summaryFile)
+          script {
+              def summaryFile = readFile('allure-report/widgets/summary.json')
+              def summary = new groovy.json.JsonSlurper().parseText(summaryFile)
 
-               def total = summary.statistic.total
-               def passed = summary.statistic.passed
-               def passRate = total > 0 ? (passed * 100.0 / total).round(2) : 0
+              def total = summary.statistic.total
+              def passed = summary.statistic.passed
+              def passRate = 0
 
-               def message = "✅ Web Test Execution Finished\n" +
-                             "Total: ${total}\n" +
-                             "Passed: ${passed}\n" +
-                             "Pass Rate: ${passRate}%"
+              if (total > 0) {
+                  passRate = ((passed * 100.0) / total)
+                      .setScale(2, java.math.RoundingMode.HALF_UP)
+              }
 
-               sh """
-                   curl -s -X POST https://api.telegram.org/bot8228531250:AAF4-CNqenOBmhO_U0qOq1pcpvMDNY0RvBU/sendMessage \
-                        -d chat_id=6877916742 \
-                        -d text="${message}"
-               """
-           }
+              def message = """✅ Web Test Execution Finished
+          Total: ${total}
+          Passed: ${passed}
+          Pass Rate: ${passRate}%"""
+
+              sh """
+                  curl -s -X POST https://api.telegram.org/bot8228531250:AAF4-CNqenOBmhO_U0qOq1pcpvMDNY0RvBU/sendMessage \
+                       -d chat_id=6877916742 \
+                       -d text="${message}"
+              """
+          }
+
         }
     }
 }
