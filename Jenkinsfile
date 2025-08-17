@@ -69,24 +69,27 @@ pipeline {
             echo "Allure report generated"
 
             script {
-                // Read and parse the summary JSON
-                def summaryFile = readFile('allure-report/widgets/summary.json')
-                def summary = new JsonSlurper().parseText(summaryFile)
+                try {
+                    // Read and parse the summary JSON safely
+                    def summaryFile = readFile('allure-report/widgets/summary.json')
+                    def summary = new JsonSlurper().parseText(summaryFile)
 
-                def total = summary.statistic.total
-                def passed = summary.statistic.passed
+                    def total = summary.statistic.total ?: 0
+                    def passed = summary.statistic.passed ?: 0
 
-                // Message only "passed/total"
-                def message = """✅ Web Test Execution Finished
+                    def message = """✅ Web Test Execution Finished
 Passed: ${passed}/${total}
 """
 
-                // Send message to Telegram
-                sh """
-                    curl -s -X POST https://api.telegram.org/bot8228531250:AAF4-CNqenOBmhO_U0qOq1pcpvMDNY0RvBU/sendMessage \
-                         -d chat_id=6877916742 \
-                         -d text="${message}"
-                """
+                    // Send message to Telegram
+                    sh """
+                        curl -s -X POST https://api.telegram.org/bot8228531250:AAF4-CNqenOBmhO_U0qOq1pcpvMDNY0RvBU/sendMessage \
+                             -d chat_id=6877916742 \
+                             -d text="${message}"
+                    """
+                } catch (Exception e) {
+                    echo "⚠️ Could not read allure summary or send Telegram notification: ${e.message}"
+                }
             }
         }
     }
