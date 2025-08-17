@@ -1,8 +1,9 @@
 package factory.settings;
 
-import org.openqa.selenium.chrome.ChromeOptions;
 import java.util.HashMap;
 import java.util.Map;
+import org.openqa.selenium.chrome.ChromeOptions;
+import utils.VideoUtils;
 
 public class ChromeSettings {
 
@@ -15,11 +16,14 @@ public class ChromeSettings {
     options.addArguments("--disable-notifications");
     options.addArguments("--disable-popup-blocking");
 
-    // Add Selenoid capabilities
     Map<String, Object> selenoidOptions = new HashMap<>();
     selenoidOptions.put("enableVNC", true);
-    options.setCapability("selenoid:options", selenoidOptions);
+    selenoidOptions.put("enableVideo", true);
 
+    String videoName = VideoUtils.generateVideoName();
+    selenoidOptions.put("videoName", videoName);
+
+    options.setCapability("selenoid:options", selenoidOptions);
     return options;
   }
 }

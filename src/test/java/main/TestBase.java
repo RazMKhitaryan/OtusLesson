@@ -1,27 +1,29 @@
 package main;
 
 import factory.WebDriverFactory;
-import org.openqa.selenium.WebDriver;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import utils.AllureUtils;
+import utils.VideoUtils;
 
-@SpringBootTest(classes = Application.class)
-public abstract class TestBase extends AbstractTestNGSpringContextTests {
+public abstract class TestBase {
 
-  @Autowired
-  private WebDriverFactory webDriverFactory;
+  protected WebDriverFactory webDriverFactory = new WebDriverFactory();
 
-  @BeforeMethod(alwaysRun = true)
-  public void setUp() {
-    System.out.println("Initializing WebDriver...");
+  @BeforeMethod
+  public void setUp() throws Exception {
     webDriverFactory.create();
   }
 
-  @AfterMethod(alwaysRun = true)
+  @AfterMethod
   public void tearDown() {
-    webDriverFactory.killDriver();
+    try {
+      String videoPath = VideoUtils.getVideoPath();
+      AllureUtils.attachVideoToAllure(videoPath);
+      webDriverFactory.killDriver();
+      VideoUtils.clear();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 }
