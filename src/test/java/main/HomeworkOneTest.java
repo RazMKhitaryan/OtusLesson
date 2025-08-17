@@ -66,4 +66,5 @@ public class HomeworkOneTest extends TestBase {
         .as("Course '%s' should be marked as selected", courseName)
         .isTrue();
   }
+
 }
