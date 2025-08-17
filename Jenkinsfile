@@ -73,7 +73,7 @@ pipeline {
                 def passed = summary.statistic.passed
                 def passRate = total > 0 ? (passed * 100.0 / total).round(2) : 0
 
-                def message = "✅ Test Execution Finished\n" +
+                def message = "✅ Web Test Execution Finished\n" +
                               "Total: ${total}\n" +
                               "Passed: ${passed}\n" +
                               "Pass Rate: ${passRate}%"
