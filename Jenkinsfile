@@ -76,15 +76,9 @@ pipeline {
                 def total = summary.statistic.total
                 def passed = summary.statistic.passed
 
-                // Compute pass rate: convert to double and use .round(2)
-                def passRate = total > 0
-                    ? ((passed * 100.0 / total) as Double).round(2)
-                    : 0.0
-
+                // Message only "passed/total"
                 def message = """✅ Web Test Execution Finished
-Total: ${total}
-Passed: ${passed}
-Pass Rate: ${passRate}%
+Passed: ${passed}/${total}
 """
 
                 // Send message to Telegram
