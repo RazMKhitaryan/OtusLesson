@@ -10,7 +10,7 @@ pipeline {
             description: 'Choose browser for the tests'
         )
 
-        // Git parameter (requires Git Parameter Plugin)
+        // Git Parameter (requires Git Parameter Plugin)
         gitParameter(
             branch: '',
             branchFilter: 'origin/(.*)',
@@ -33,9 +33,10 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM',
-                          branches: [[name: "${params.BRANCH}"]],
-                          userRemoteConfigs: [[url: 'https://github.com/RazMKhitaryan/OtusLesson.git']]
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[ name: "${params.BRANCH}" ]],
+                    userRemoteConfigs: [[ url: 'https://github.com/RazMKhitaryan/OtusLesson.git' ]]
                 ])
             }
         }
@@ -43,13 +44,13 @@ pipeline {
         stage('Run Tests') {
             steps {
                 sh """
-                mvn clean test \
-                    -Dbrowser=${params.BROWSER} \
-                    -DbaseUrl=https://otus.ru \
-                    -Dmode=remote \
-                    -Durl=http://45.132.17.22/wd/hub \
-                    -DthreadCount=3 \
-                    -Dsurefire.testFailureIgnore=true || true
+                    mvn clean test \
+                        -Dbrowser=${params.BROWSER} \
+                        -DbaseUrl=https://otus.ru \
+                        -Dmode=remote \
+                        -Durl=http://45.132.17.22/wd/hub \
+                        -DthreadCount=3 \
+                        -Dsurefire.testFailureIgnore=true || true
                 """
             }
         }
@@ -61,37 +62,38 @@ pipeline {
             allure([
                 includeProperties: false,
                 reportBuildPolicy: 'ALWAYS',
-                results: [[path: 'allure-results']]
+                results: [[ path: 'allure-results' ]]
             ])
 
             sh 'allure generate --clean allure-results'
-            echo "allure folder generated"
+            echo "Allure report generated"
 
-          script {
-              def summaryFile = readFile('allure-report/widgets/summary.json')
-              def summary = new groovy.json.JsonSlurper().parseText(summaryFile)
+            script {
+                // Read and parse the summary JSON
+                def summaryFile = readFile('allure-report/widgets/summary.json')
+                def summary = new JsonSlurper().parseText(summaryFile)
 
-              def total = summary.statistic.total
-              def passed = summary.statistic.passed
-              def passRate = 0
+                def total = summary.statistic.total
+                def passed = summary.statistic.passed
 
-              if (total > 0) {
-                  passRate = ((passed * 100.0) / total)
-                      .setScale(2, java.math.RoundingMode.HALF_UP)
-              }
+                // Compute pass rate: convert to double and use .round(2)
+                def passRate = total > 0
+                    ? ((passed * 100.0 / total) as Double).round(2)
+                    : 0.0
 
-              def message = """✅ Web Test Execution Finished
-          Total: ${total}
-          Passed: ${passed}
-          Pass Rate: ${passRate}%"""
+                def message = """✅ Web Test Execution Finished
+Total: ${total}
+Passed: ${passed}
+Pass Rate: ${passRate}%
+"""
 
-              sh """
-                  curl -s -X POST https://api.telegram.org/bot8228531250:AAF4-CNqenOBmhO_U0qOq1pcpvMDNY0RvBU/sendMessage \
-                       -d chat_id=6877916742 \
-                       -d text="${message}"
-              """
-          }
-
+                // Send message to Telegram
+                sh """
+                    curl -s -X POST https://api.telegram.org/bot8228531250:AAF4-CNqenOBmhO_U0qOq1pcpvMDNY0RvBU/sendMessage \
+                         -d chat_id=6877916742 \
+                         -d text="${message}"
+                """
+            }
         }
     }
 }
