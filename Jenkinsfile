@@ -24,6 +24,14 @@ pipeline {
         )
     }
 
+    triggers {
+        // Trigger on SCM changes (after every merge/push)
+        pollSCM('* * * * *') // checks every minute, adjust as needed
+
+        // Trigger every day at 21:00
+        cron('0 21 * * *')
+    }
+
     stages {
         stage('Test Allure CLI') {
             steps {
@@ -78,8 +86,8 @@ pipeline {
                     def passed = summary.statistic.passed ?: 0
 
                     def message = """✅ Web Test Execution Finished
-Passed: ${passed}/${total}
-"""
+                    Passed: ${passed}/${total}
+                    """
 
                     // Send message to Telegram
                     sh """
