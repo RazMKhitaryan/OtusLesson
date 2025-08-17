@@ -60,8 +60,6 @@ pipeline {
             echo "Publishing Allure results..."
             allure([
                 includeProperties: false,
-                jdk: '',
-                properties: [],
                 reportBuildPolicy: 'ALWAYS',
                 results: [[path: 'allure-results']]
             ])
@@ -70,25 +68,22 @@ pipeline {
             echo "allure folder generated"
 
             script {
-                def summaryFile = 'allure-report/widgets/summary.json'
-                def summaryContent = readFile(summaryFile)
+                def summary = readJSON file: 'allure-report/widgets/summary.json'
+                def total = summary.statistic.total
+                def passed = summary.statistic.passed
+                def passRate = total > 0 ? (passed * 100.0 / total).round(2) : 0
 
-                def json = new JsonSlurper().parseText(summaryContent)
+                def message = "✅ Test Execution Finished\n" +
+                              "Total: ${total}\n" +
+                              "Passed: ${passed}\n" +
+                              "Pass Rate: ${passRate}%"
 
-                def passedCount = json.statistic.passed
-                def totalCount = json.statistic.total
-                def message = "Allure Report Web run: ${passedCount}/${totalCount} tests passed ✅"
-
-                def botToken = '8228531250:AAF4-CNqenOBmhO_U0qOq1pcpvMDNY0RvBU'
-                def chatId = '6877916742'
                 sh """
-                curl -s -X POST https://api.telegram.org/bot${botToken}/sendMessage \
-                     -d chat_id=${chatId} \
-                     -d text="${message}"
+                    curl -s -X POST https://api.telegram.org/bot8228531250:AAF4-CNqenOBmhO_U0qOq1pcpvMDNY0RvBU/sendMessage \
+                         -d chat_id=6877916742 \
+                         -d text="${message}"
                 """
             }
-
-            echo "Pipeline finished"
         }
     }
 }
