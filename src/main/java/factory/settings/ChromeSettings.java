@@ -3,7 +3,6 @@ package factory.settings;
 import java.util.HashMap;
 import java.util.Map;
 import org.openqa.selenium.chrome.ChromeOptions;
-import utils.VideoUtils;
 
 public class ChromeSettings {
 
@@ -22,11 +21,6 @@ public class ChromeSettings {
     Map<String, Object> selenoidOptions = new HashMap<>();
     selenoidOptions.put("enableVNC", true); // for VNC access
     selenoidOptions.put("enableVideo", true); // enable video recording
-
-    // Set unique video name for each test
-    String videoName = VideoUtils.generateVideoName();
-    selenoidOptions.put("videoName", videoName);
-
     // Attach selenoid options to Chrome
     options.setCapability("selenoid:options", selenoidOptions);
 
