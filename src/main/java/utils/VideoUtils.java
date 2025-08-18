@@ -23,7 +23,11 @@ public class VideoUtils {
   public static String getVideoPath() {
     File dir = new File("target/videos");
     if (!dir.exists()) {
-      dir.mkdirs(); // create folder if missing
+      try {
+        dir.mkdirs();
+      } catch (Exception e) {
+        throw new RuntimeException("Failed to create videos folder", e);
+      }
     }
     return "target/videos/" + getVideoName();
   }

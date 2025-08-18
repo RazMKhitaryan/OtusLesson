@@ -23,9 +23,9 @@ public abstract class TestBase extends AbstractTestNGSpringContextTests {
   @AfterMethod
   public void tearDown() {
     try {
+      webDriverFactory.killDriver();
       String videoPath = VideoUtils.getVideoPath();
       AllureUtils.attachVideoToAllure(videoPath);
-      webDriverFactory.killDriver();
       VideoUtils.clear();
     } catch (Exception e) {
       e.printStackTrace();
