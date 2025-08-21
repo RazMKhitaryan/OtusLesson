@@ -22,8 +22,9 @@
     <selenium.version>4.32.0</selenium.version>
     <assertj.version>3.24.2</assertj.version>
     <jsoup.version>1.16.2</jsoup.version>
-    <threadCount>3</threadCount>
+    <threadCount>4</threadCount>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <video.dir>target/video/</video.dir>
   </properties>
 
   <dependencies>
@@ -112,6 +113,7 @@
           <systemPropertyVariables>
             <browser>chrome</browser>
             <baseUrl>https://otus.ru</baseUrl>
+            <video.dir>${video.dir}</video.dir>
           </systemPropertyVariables>
           <parallel>methods</parallel>
           <threadCount>${threadCount}</threadCount>
