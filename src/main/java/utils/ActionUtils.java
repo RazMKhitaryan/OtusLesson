@@ -22,7 +22,6 @@ public class ActionUtils {
         this.actions = new Actions(webDriverFactory.getDriver());
       } catch (IllegalStateException e) {
         // Create the driver if it doesn't exist yet
-        this.actions = new Actions(webDriverFactory.create());
       }
     }
   }
