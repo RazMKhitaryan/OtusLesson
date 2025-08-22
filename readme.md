@@ -26,4 +26,4 @@ cd OtusLesson
 
 ## Run the tests with command from terminal
 
-`mvn clean install -Dbrowser=chrome -DbaseUrl=https://otus.ru -Dmode=local -Durl=http://45.132.17.22/wd/hub -DthreadCount=3 -Djava.awt.headless=false`
+`mvn clean install -Dbrowser=chrome -DbaseUrl=https://otus.ru -Dmode=remote -Durl=http://45.132.17.22/wd/hub -DthreadCount=3 -Djava.awt.headless=false`
