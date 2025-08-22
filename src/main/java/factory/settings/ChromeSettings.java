@@ -16,17 +16,9 @@ public class ChromeSettings {
     options.addArguments("--disable-extensions");
     options.addArguments("--disable-notifications");
     options.addArguments("--disable-popup-blocking");
-
-    // Make sure headless is OFF
-    // options.addArguments("--headless"); // <-- remove/comment this line if exists
-
     // Selenoid capabilities
     Map<String, Object> selenoidOptions = new HashMap<>();
-    selenoidOptions.put("enableVNC", true);              // for VNC access
-    selenoidOptions.put("enableVideo", true);            // enable video recording
-    selenoidOptions.put("videoName", testName + ".avi"); // unique video name per test
-    selenoidOptions.put("videoScreenSize", "1920x1080");// optional
-
+    selenoidOptions.put("enableVNC", true);
     options.setCapability("selenoid:options", selenoidOptions);
 
     return options;
