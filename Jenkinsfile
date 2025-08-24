@@ -71,7 +71,8 @@ node('maven') {
     // Stage: Run UI Tests
     stage('Run UI Tests') {
         sh """
-        sudo systemctl start docker
+        systemctl start docker || true
+        docker version
         sudo systemctl enable docker
         sudo systemctl status docker
 
