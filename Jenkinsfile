@@ -45,19 +45,19 @@ node('maven') {
 
     // Stage: Run UI Tests
     stage('Run UI Tests') {
-        sh """
-        ls -l /var/run/docker.sock
-        getent group docker
-        docker ps
-        docker pull localhost:5005/ui_tests:latest
-        docker run --rm \
-            --name ui_tests_run \
-            --network host \
-            -e BROWSER=${params.BROWSER} \
-            -v ${WORKSPACE}/allure-results:/app/allure-results \
-            -v ${WORKSPACE}/allure-report:/app/allure-report \
-            localhost:5005/ui_tests:latest
-        """
+      sh """
+          ls -l /var/run/docker.sock
+          getent group docker
+          docker ps
+          docker pull localhost:5005/ui_tests:latest
+          docker run --rm \
+              --name ui_tests_run \
+              --network host \
+              -e BROWSER=${params.BROWSER} \
+              -v ${WORKSPACE}/allure-results:/app/allure-results \
+              -v ${WORKSPACE}/allure-report:/app/allure-report \
+              localhost:5005/ui_tests:latest
+          """
     }
 
     // Post-processing inside Scripted Pipeline
