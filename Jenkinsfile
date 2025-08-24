@@ -52,12 +52,13 @@ pipeline {
         stage('Run Tests') {
             steps {
                 sh """
-                    docker run --rm \
-                                   --network host \
-                                   -e BROWSER=${params.BROWSER} \
-                                   -v \$(pwd)/allure-results:/app/allure-results \
-                                   -v \$(pwd)/allure-report:/app/allure-report \
-                                   localhost:5005/ui_tests:latest
+                docker run --rm \
+                --name ui_tests_run \
+                --network host \
+                -e BROWSER=${params.BROWSER} \
+                -v \$(pwd)/allure-results:/app/allure-results \
+                -v \$(pwd)/allure-report:/app/allure-report \
+                localhost:5005/ui_tests:latest
                 """
             }
         }
