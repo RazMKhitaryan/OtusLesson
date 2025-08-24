@@ -1,20 +1,30 @@
-# Use the official Maven image to build and execute Java/Maven projects
+# Use Maven image
 FROM maven:3.9.4-eclipse-temurin-21
 
-# Set environment variables
+# Environment variables
 ENV BASE_URL=https://otus.ru
 ENV BROWSER=chrome
 ENV MODE=remote
 ENV URL=http://45.132.17.22/wd/hub
 ENV THREAD_COUNT=3
+ENV HEADLESS=false
 
-# Create and set the working directory
+# Working directory
 WORKDIR /app
 
-# Copy the project files to the working directory
+# Copy project files
 COPY . /app
 
-# Install dependencies and compile the project
+# Install dependencies (compile without running tests)
 RUN mvn clean install -DskipTests
 
-# Set the default command to run tests
+# Default command: run tests and generate Allure report
+CMD mvn clean install \
+      -Dbrowser=${BROWSER} \
+      -DbaseUrl=${BASE_URL} \
+      -Dmode=${MODE} \
+      -Durl=${URL} \
+      -DthreadCount=${THREAD_COUNT} \
+      -Djava.awt.headless=${HEADLESS} \
+    && mkdir -p /app/allure-report \
+    && allure generate /app/allure-results -o /app/allure-report --clean
