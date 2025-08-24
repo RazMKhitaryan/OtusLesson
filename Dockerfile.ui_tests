@@ -1,0 +1,20 @@
+# Use the official Maven image to build and execute Java/Maven projects
+FROM maven:3.9.4-eclipse-temurin-21
+
+# Set environment variables
+ENV BASE_URL=https://otus.ru
+ENV BROWSER=chrome
+ENV MODE=remote
+ENV URL=http://45.132.17.22/wd/hub
+ENV THREAD_COUNT=3
+
+# Create and set the working directory
+WORKDIR /app
+
+# Copy the project files to the working directory
+COPY . /app
+
+# Install dependencies and compile the project
+RUN mvn clean install -DskipTests
+
+# Set the default command to run tests

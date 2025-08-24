@@ -51,15 +51,20 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh """
-                    mvn clean test \
-                        -Dbrowser=${params.BROWSER} \
-                        -DbaseUrl=https://otus.ru \
-                        -Dmode=remote \
-                        -Durl=http://45.132.17.22/wd/hub \
-                        -DthreadCount=3 \
-                        -Dsurefire.testFailureIgnore=true || true
-                """
+                  sh '''
+                      docker build -t localhost:5005/ui_tests:latest .
+                      docker push localhost:5005/ui_tests:latest
+                  '''
+
+//                 sh """
+//                     mvn clean test \
+//                         -Dbrowser=${params.BROWSER} \
+//                         -DbaseUrl=https://otus.ru \
+//                         -Dmode=remote \
+//                         -Durl=http://45.132.17.22/wd/hub \
+//                         -DthreadCount=3 \
+//                         -Dsurefire.testFailureIgnore=true || true
+//                 """
             }
         }
     }
