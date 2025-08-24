@@ -1,7 +1,7 @@
 import groovy.json.JsonSlurper
 
 pipeline {
-    agent { label 'maven' }
+    agent { label 'maven' }   // use your custom Maven+Docker agent
 
     parameters {
         choice(
@@ -10,7 +10,6 @@ pipeline {
             description: 'Choose browser for the tests'
         )
 
-        // Git Parameter (requires Git Parameter Plugin)
         gitParameter(
             branch: '',
             branchFilter: 'origin/(.*)',
@@ -25,15 +24,12 @@ pipeline {
     }
 
     triggers {
-        // Trigger on SCM changes (after every merge/push)
-        pollSCM('* * * * *') // checks every minute, adjust as needed
-
-        // Trigger every day at 21:00
-        cron('0 21 * * *')
+        pollSCM('* * * * *')   // every minute
+        cron('0 21 * * *')     // every day at 21:00
     }
 
     stages {
-        stage('Test Allure CLI') {
+        stage('Check Allure CLI') {
             steps {
                 sh "allure --version"
             }
@@ -49,20 +45,17 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
+        stage('Run UI Tests') {
             steps {
                 sh """
-                sudo systemctl start docker \
-                sudo systemctl enable docker \
-
-        docker run --rm \
-        --name ui_tests_run \
-        --network host \
-        -e BROWSER=${params.BROWSER} \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        -v /home/jenkins/workspace/Web_tests/allure-results:/app/target/allure-results \
-        -v /home/jenkins/workspace/Web_tests/allure-report:/app/target/allure-report \
-        localhost:5005/ui_tests:latest
+                docker run --rm \
+                    --name ui_tests_run \
+                    --network host \
+                    -e BROWSER=${params.BROWSER} \
+                    -v /var/run/docker.sock:/var/run/docker.sock \
+                    -v ${WORKSPACE}/allure-results:/app/allure-results \
+                    -v ${WORKSPACE}/allure-report:/app/allure-report \
+                    localhost:5005/ui_tests:latest
                 """
             }
         }
@@ -77,12 +70,8 @@ pipeline {
                 results: [[ path: 'allure-results' ]]
             ])
 
-            sh 'allure generate --clean allure-results'
-            echo "Allure report generated"
-
             script {
                 try {
-                    // Read and parse the summary JSON safely
                     def summaryFile = readFile('allure-report/widgets/summary.json')
                     def summary = new JsonSlurper().parseText(summaryFile)
 
@@ -90,10 +79,9 @@ pipeline {
                     def passed = summary.statistic.passed ?: 0
 
                     def message = """✅ Web Test Execution Finished
-                    Passed: ${passed}/${total}
-                    """
+Passed: ${passed}/${total}
+"""
 
-                    // Send message to Telegram
                     sh """
                         curl -s -X POST https://api.telegram.org/bot8228531250:AAF4-CNqenOBmhO_U0qOq1pcpvMDNY0RvBU/sendMessage \
                              -d chat_id=6877916742 \
