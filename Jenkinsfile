@@ -1,8 +1,9 @@
 import groovy.json.JsonSlurper
+import hudson.triggers.SCMTrigger
 
 node('maven') {
 
-    // Parameters
+    // Parameters and Triggers
     properties([
         parameters([
             choice(
@@ -21,78 +22,64 @@ node('maven') {
                 sortMode: 'DESCENDING',
                 type: 'PT_BRANCH'
             )
+        ]),
+        pipelineTriggers([
+            [$class: 'SCMTrigger', scmpoll_spec: '* * * * *'],   // poll every minute
+            [$class: 'TimerTrigger', spec: '0 21 * * *']        // daily at 21:00
         ])
     ])
 
-    // Triggers
-    triggers {
-        pollSCM('* * * * *')   // every minute
-        cron('0 21 * * *')     // every day at 21:00
-    }
-
-    // Stages
+    // Stage: Check Allure CLI
     stage('Check Allure CLI') {
-        steps {
-            sh "allure --version"
-        }
+        sh "allure --version"
     }
 
+    // Stage: Checkout
     stage('Checkout') {
-        steps {
-            checkout([
-                $class: 'GitSCM',
-                branches: [[ name: "${params.BRANCH}" ]],
-                userRemoteConfigs: [[ url: 'https://github.com/RazMKhitaryan/OtusLesson.git' ]]
-            ])
-        }
+        checkout([
+            $class: 'GitSCM',
+            branches: [[ name: "${params.BRANCH}" ]],
+            userRemoteConfigs: [[ url: 'https://github.com/RazMKhitaryan/OtusLesson.git' ]]
+        ])
     }
 
+    // Stage: Run UI Tests
     stage('Run UI Tests') {
-        steps {
-            sh """
-                docker ps
-                docker run --rm \
-                    --name ui_tests_run \
-                    --network host \
-                    -e BROWSER=${params.BROWSER} \
-                    -v ${WORKSPACE}/allure-results:/app/allure-results \
-                    -v ${WORKSPACE}/allure-report:/app/allure-report \
-                    localhost:5005/ui_tests:latest
-            """
-        }
+        sh """
+            docker ps
+            docker run --rm \
+                --name ui_tests_run \
+                --network host \
+                -e BROWSER=${params.BROWSER} \
+                -v ${WORKSPACE}/allure-results:/app/allure-results \
+                -v ${WORKSPACE}/allure-report:/app/allure-report \
+                localhost:5005/ui_tests:latest
+        """
     }
 
-    // Post steps
-    post {
-        always {
+    // Post-processing inside Scripted Pipeline
+    stage('Publish Results & Notify') {
+        try {
             echo "Publishing Allure results..."
-            allure([
-                includeProperties: false,
-                reportBuildPolicy: 'ALWAYS',
-                results: [[ path: 'allure-results' ]]
-            ])
+            sh "allure generate ${WORKSPACE}/allure-results -o ${WORKSPACE}/allure-report --clean"
 
-            script {
-                try {
-                    def summaryFile = readFile('allure-report/widgets/summary.json')
-                    def summary = new JsonSlurper().parseText(summaryFile)
+            def summaryFile = readFile('allure-report/widgets/summary.json')
+            def summary = new JsonSlurper().parseText(summaryFile)
 
-                    def total = summary.statistic.total ?: 0
-                    def passed = summary.statistic.passed ?: 0
+            def total = summary.statistic.total ?: 0
+            def passed = summary.statistic.passed ?: 0
 
-                    def message = """✅ Web Test Execution Finished
+            def message = """✅ Web Test Execution Finished
 Passed: ${passed}/${total}
 """
 
-                    sh """
-                        curl -s -X POST https://api.telegram.org/bot8228531250:AAF4-CNqenOBmhO_U0qOq1pcpvMDNY0RvBU/sendMessage \
-                             -d chat_id=6877916742 \
-                             -d text="${message}"
-                    """
-                } catch (Exception e) {
-                    echo "⚠️ Could not read Allure summary or send Telegram notification: ${e.message}"
-                }
-            }
+            sh """
+                curl -s -X POST https://api.telegram.org/bot<bot_token>/sendMessage \
+                     -d chat_id=<chat_id> \
+                     -d text="${message}"
+            """
+        } catch (Exception e) {
+            echo "⚠️ Could not read Allure summary or send Telegram notification: ${e.message}"
         }
     }
 }
