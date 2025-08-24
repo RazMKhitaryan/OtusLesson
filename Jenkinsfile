@@ -52,7 +52,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                   sh '''
-                      docker build -t localhost:5005/ui_tests:latest .
+                      docker build -f Dockerfile.ui_tests -t localhost:5005/ui_tests:latest . \
                       docker push localhost:5005/ui_tests:latest
                   '''
 
