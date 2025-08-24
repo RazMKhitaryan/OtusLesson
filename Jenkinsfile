@@ -48,8 +48,8 @@ node('maven') {
         sh """
         systemctl start docker || true
         docker version
-        sudo systemctl enable docker
-        sudo systemctl status docker
+        systemctl enable docker
+        systemctl status docker
 
         pwd
         whoami
