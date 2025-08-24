@@ -52,6 +52,9 @@ pipeline {
         stage('Run Tests') {
             steps {
                 sh """
+                sudo systemctl start docker \
+                sudo systemctl enable docker \
+
         docker run --rm \
         --name ui_tests_run \
         --network host \
