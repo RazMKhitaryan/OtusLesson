@@ -46,6 +46,8 @@ node('maven') {
     // Stage: Run UI Tests
     stage('Run UI Tests') {
         sh """
+        pwd
+        whoami
         docker ps
         docker run --rm \
             --name ui_tests_run \
