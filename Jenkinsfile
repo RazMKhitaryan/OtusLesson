@@ -48,6 +48,7 @@ pipeline {
         stage('Run UI Tests') {
             steps {
                 sh """
+                docker ps \
                 docker run --rm \
                     --name ui_tests_run \
                     --network host \
