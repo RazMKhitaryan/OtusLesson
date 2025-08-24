@@ -50,7 +50,7 @@ node('maven') {
         docker pull localhost:5005/ui_tests:latest
         docker run --rm \
             --name ui_tests_run \
-            --network selenoid_net1 \
+            --network host \
             -e BROWSER=${params.BROWSER} \
             -v ${WORKSPACE}/allure-results:/app/allure-results \
             -v ${WORKSPACE}/allure-report:/app/allure-report \
