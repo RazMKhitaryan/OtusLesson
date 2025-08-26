@@ -74,6 +74,9 @@ node('maven') {
                     def message = "🌐 UI Test Execution Finished\n" +
                                   "✅ Passed: ${passed}/${total}\n" +
                                   "📊 Allure Report: ${env.BUILD_URL}allure"
+
+                    archiveArtifacts artifacts: 'allure-results/**', allowEmptyArchive: true
+
                     sh """
                        curl -s -X POST https://api.telegram.org/bot8228531250:AAF4-CNqenOBmhO_U0qOq1pcpvMDNY0RvBU/sendMessage \
                        -d chat_id=6877916742 \
